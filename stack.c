@@ -8,22 +8,14 @@
 
 //Inserir elementos no inicio
 void push(ESTADO e){
-  //criar um novo nodo temp e alocar memoria
   struct Node* temp;
   temp = (struct Node*)malloc(sizeof(struct Node));
 
-  //verificar se a stack esta cheia“out-of-memory”
   if (!temp) {
     printf("\nStack sobrelotada");
   }
-
-  //introduzir os dados no respetivo campo em temp
   temp->estado = e;
-
-  //direcionar o apontador top para temp
   temp->next = top;
-
-  //tornar temp o topo da stack
   top = temp;
 }
 
@@ -35,7 +27,6 @@ int isEmpty(){
 //Indicar o elemento do topo da stack
 ESTADO peek()
 {
-  //verificar se esta vazia
   if (!isEmpty(top))
     return top->estado;
 }
@@ -44,16 +35,12 @@ ESTADO peek()
 void pop(){
   struct Node* temp;
 
-  //verificar se esta vazia
   if (top == NULL) {
     printf("\nStack vazia");
   }
   else {
-    //top fica com o valor de temp
     temp = top;
-    //o nodo seguinte passa a ser o topo
     top = top->next;
-    //libertar memoria do nodo de topo
     free(temp);
   }
 }
@@ -61,14 +48,12 @@ void pop(){
 //Mostrar o conteudo da stack
 void display(){
   struct Node* temp; char c;
-  //verifica se esta vazia
   if (top == NULL) {
     printf("\nStack vazia");
   }
   else {
     temp = top;
     while (temp != NULL) {
-      //imprime o valor do nodo
       for (i = 0; i < 8; i++) {
       printf("%d ",(i+1));
       for (j = 0; j < 8; j++) {
@@ -79,22 +64,24 @@ void display(){
       }
       printf("\n");
     }
-      //direciona o apontador para temp
       temp = temp->next;
     }
   }
+}
+
+void clean()
+{
+  top = NULL;
 }
 
 ESTADO do_undo(ESTADO e)
 {
   pop();
   if (top != NULL) {
-    //display();
     e = peek();
     printa(e,1,1);
     return e;
   }
   push(e);
-  //printa(e,1,1);
   return e;
 }

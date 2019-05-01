@@ -4,7 +4,9 @@
 #include <ctype.h>
 #include "estado.h"
 #include "stack.h"
+#include "bot.h"
 
+//variáveis globais
 ESTADO e = {0};
 static int var = 1;
 
@@ -17,7 +19,7 @@ static int var = 1;
 ESTADO commands(ESTADO e,char linha[])
 {
   char *cmd1, *cmd2, *cmd3;
-  int i=0; int a,b; static int t = 0;
+  int i=0; int a,b;
 
   while(linha[i]) {linha[i] = toupper(linha[i]); i++;}
 
@@ -28,7 +30,8 @@ ESTADO commands(ESTADO e,char linha[])
   switch (*cmd1) {
 
     case 'N':
-      if(*cmd2) {
+      if(cmd2) {
+        clean();
       //inicializa tabuleiro
         for (i = 0; i < 8; i++)
           for (j = 0; j < 8; j++) e.grelha[i][j] = VAZIA;
@@ -56,21 +59,22 @@ ESTADO commands(ESTADO e,char linha[])
       break;
 
     case 'L':
-      if(*cmd2) {
+      if(cmd2) {
         if(var==0) leFicheiro(cmd2); }
       else printf("Comando inválido\n");
       break;
 
     case 'E':
-      if(*cmd2) {
+      if(cmd2) {
         if(var==0) printE(e,cmd2); }
       else printf("Comando inválido\n");
       break;
 
     case 'J':
-      if(cmd2 && cmd3) {
-        a = atoi(cmd2); b = atoi(cmd3);
-        if(var==0) jogada(e,t,a,b); }
+      if(listAS(e) == 0) {printf("Não existem jogadas válidas\n"); jogada(e,1,1);}
+      else if(cmd2 && cmd3) {
+          a = atoi(cmd2); b = atoi(cmd3);
+          if(var==0) jogada(e,a,b); }
       else printf("Comando inválido\n");
       break;
 
@@ -85,10 +89,13 @@ ESTADO commands(ESTADO e,char linha[])
     case 'U':
       if(var==0) e = do_undo(e);
       break;
-
+/*
     case 'A':
+      if(cmd2 && cmd3)
+        if(var==0) bot(e,cmd2);
+      else printf("Comando inválido\n");
       break;
-
+*/
     case 'Q':
       exit(0);
 

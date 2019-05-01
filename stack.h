@@ -2,13 +2,13 @@
 #define TESTES_STACK_H
 #include "estado.h"
 
-//Declarar o nodo da lista-ligada
 struct Node {
   ESTADO estado;
   struct Node* next;
 };
-struct Node* top; //stack
+struct Node* top;
 
+void clean();
 void push(ESTADO);
 int isEmpty();
 ESTADO peek();
@@ -16,4 +16,4 @@ void pop();
 void display();
 ESTADO do_undo(ESTADO);
 
-#endif 
+#endif

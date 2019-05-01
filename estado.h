@@ -21,9 +21,11 @@ typedef struct estado {
 
 int line, column, i, j;
 
+int listAS(ESTADO);
 void printa(ESTADO,int,int);
-void jogada(ESTADO,int,int,int);
-void leFicheiro();
+ESTADO preenche(ESTADO,int,int);
+ESTADO jogada(ESTADO,int,int);
+ESTADO leFicheiro(char *);
 void interpretador(ESTADO);
 void printS();
 void printE();
