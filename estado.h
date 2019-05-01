@@ -29,5 +29,8 @@ ESTADO leFicheiro(char *);
 void interpretador(ESTADO);
 void printS();
 void printE();
+VALOR pecas(ESTADO,int,int);
+int scoreO(ESTADO);
+int scoreX(ESTADO);
 
 #endif //PROJ_ESTADO_H

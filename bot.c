@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "estado.h"
-
+/*
 ESTADO bot(ESTADO e, char *cmd2) {
   int i, j, x = 0, y, l, c, r;
   ESTADO tmp;
@@ -32,4 +32,4 @@ ESTADO bot(ESTADO e, char *cmd2) {
       }
     r = l * 10 + c;
   return r;
-}
+}*/
