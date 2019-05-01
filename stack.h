@@ -14,5 +14,6 @@ int isEmpty();
 ESTADO peek();
 void pop();
 void display();
+ESTADO do_undo(ESTADO);
 
-#endif //TESTES_STACK_H
+#endif 

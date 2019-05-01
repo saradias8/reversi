@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "estado.h"
+#include "stack.h"
 
 //função que verifica as posições onde é possível jogar
 VALOR pecas(ESTADO e, int line, int column)
@@ -15,7 +16,7 @@ VALOR pecas(ESTADO e, int line, int column)
       //linha direita
       for (j = column+1; j < 8; j++) {
         if(e.grelha[line][j] == VALOR_X) t++;
-        else if(e.grelha[line][j] == VALOR_O && t>0) {e.grelha[line][column]=3; r = POSSIBLE; break;}
+        else if(e.grelha[line][j] == VALOR_O && t>0) {r = POSSIBLE; break;}
         else break;
       }
       t=0;
@@ -163,6 +164,7 @@ VALOR pecas(ESTADO e, int line, int column)
     }
   }
 }
+
 char* string[MAX];
 //função que dá a lista de posições onde o jogador atual pode jogar
 int listAS(ESTADO e)
@@ -184,32 +186,36 @@ int listAS(ESTADO e)
   return c;
 }
 
-char* listAAAA(ESTADO e)
+// função que imprime estado do jogo
+void printa(ESTADO e, int m, int n)
 {
-  int c = 0; int i,j;
-  
-  char line[2]; char column[10];
+  char c = ' '; int i,j, p = 0;
 
-  for(i=0;i<8;i++)
-    for (j=0;j<8;j++) {
-      if (pecas(e,i,j)==POSSIBLE) {
-        sprintf(line, "%d", i);
-        sprintf(column, "%d", j);
-        strcat(line,column);
-        string[c] = line;
-        c++;
-      }
+  if(e.peca == VALOR_O)
+    printf("Vez do jogador O\n\n");
+  else if (e.peca == VALOR_X) printf("Vez do jogador X\n\n");
+
+  printf("  1 2 3 4 5 6 7 8 \n");
+  for (i = 0; i < 8; i++) {
+    printf("%d ",(i+1));
+    for (j = 0; j < 8; j++) {
+      if(e.grelha[i][j] == VALOR_O)      c = 'O';
+      else if(e.grelha[i][j] == VALOR_X) c = 'X';
+      else if(m == 0 && pecas(e,i,j) == POSSIBLE)  c = '.';
+      else if(n == 0 && pecas(e,i,j) == POSSIBLE && p == 0) {c = '?'; p = 1;}
+      else if(e.grelha[i][j] == VAZIA)   c = '-';
+      printf("%c ", c);
     }
-    printf("\n");
-  return *string;
+      printf("\n");
+    }
 }
 
-// função para imprimir o estado (Tabuleiro) na terminal e no ficheiro
-void printa(ESTADO e)
+//funcao que imprime no reversi.txt o estado
+void printE(ESTADO e, char* cmd2)
 {
     char c = ' '; int i,j;
     FILE *tab;
-    tab = fopen("reversi.txt","w+");
+    tab = fopen(cmd2,"w");
 
     if(e.peca == VALOR_O)
       fprintf(tab,"O\n");
@@ -225,7 +231,7 @@ void printa(ESTADO e)
       for (j = 0; j < 8; j++) {
         if(e.grelha[i][j] == VALOR_O)      c = 'O';
         else if(e.grelha[i][j] == VALOR_X) c = 'X';
-        //else if(pecas(e,i,j) == POSSIBLE)  c = '*';
+        else if(pecas(e,i,j) == POSSIBLE)  c = '.';
         else if(e.grelha[i][j] == VAZIA)   c = '-';
         fprintf(tab,"%c ",c);
         printf("%c ", c);
@@ -271,15 +277,12 @@ void endGame (ESTADO e){
   else if (scoreO(e) < scoreX(e)) printf("O vencedor é o Jogador X!\n");
   else printf("Empataram... SMH\n");
 }
+static int tpm=0;
 
 //função que lê a jogada e a executa se for válida
 void jogada(ESTADO e, int t, int line, int column)
 {
   int x = 0, y1 = 0, y2 = 0;
-  int tpm=0;
-  FILE *tab;
-  tab = fopen("reversi.txt","w+");
-
   line--;column--;
   if(listAS(e) > 0) {
 
@@ -418,6 +421,7 @@ void jogada(ESTADO e, int t, int line, int column)
           else break;
         }
       }
+      push(e);
       if(e.peca == VALOR_O) {e.peca = VALOR_X; }
       else{ e.peca = VALOR_O;}
     }
@@ -432,7 +436,7 @@ void jogada(ESTADO e, int t, int line, int column)
   }
 
   printf("\n");
-  printa(e);
+  printa(e,1,1);
   printf("\n");
 
   printf("Score O: %d\n", scoreO(e));
@@ -443,51 +447,14 @@ void jogada(ESTADO e, int t, int line, int column)
   interpretador(e);
 }
 
-void leFicheiro()
+void leFicheiro(char *cmd2)
 {
   char c;
-  FILE *tab;
-  tab = fopen("reversi.txt","r");
+  FILE *file;
+  file = fopen(cmd2,"r");
 
-  while((c = fgetc(tab)) != EOF)
+  while((c = fgetc(file)) != EOF)
     printf("%c", c);
 
-  fclose(tab);
-}
-
-int possible(int line,int column) // NAO FUNCIONA
-{
-  int i,l,c;
-  char linha[2], coluna[2];
-
-  sprintf(linha, "%d", line);
-  sprintf(coluna, "%d", column);
-  strcat(linha,coluna);
-
-  for(i=0;string[i];i++) {
-    if(linha == string[i]) return 0;
-  }
-  return 1;
-}
-
-void printS(ESTADO e)
-{
-  char c = ' '; int i,j;
-
-  if(e.peca == VALOR_O)
-    printf("Vez do jogador O\n\n");
-  else printf("Vez do jogador X\n\n");
-
-  printf("  1 2 3 4 5 6 7 8 \n");
-  for (i = 0; i < 8; i++) {
-    printf("%d ",(i+1));
-    for (j = 0; j < 8; j++) {
-      if(e.grelha[i][j] == VALOR_O)      c = 'O';
-      else if(e.grelha[i][j] == VALOR_X) c = 'X';
-      else if(possible(i,j) == 0)        c = '*';
-      else if(e.grelha[i][j] == VAZIA)   c = '-';
-      printf("%c ", c);
-    }
-    printf("\n");
-  }
+  fclose(file);
 }

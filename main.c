@@ -3,24 +3,17 @@
 #include <string.h>
 #include <ctype.h>
 #include "estado.h"
-/*
-ESTADO commands(ESTADO e, char linha[])
-{
-  int n; char cmd[MAX];
-  strcpy(cmd,linha);
-  //n = fscanf(linha,"%s",cmd);
-  switch (toupper(cmd[0])) {
-    case "N O":
-      printf("Ola");
-      break;
-    case 'Q':
-      exit(0);
-    default:
-      printf("Comando inválido\n");
-  }
-  return e;
-}*/
+#include "stack.h"
 
+ESTADO e = {0};
+static int var = 1;
+
+/**
+ * @brief
+ * @param e
+ * @param linha
+ * @return
+ */
 ESTADO commands(ESTADO e,char linha[])
 {
   char *cmd1, *cmd2, *cmd3;
@@ -32,33 +25,77 @@ ESTADO commands(ESTADO e,char linha[])
   cmd2 = strtok(NULL," ");
   cmd3 = strtok(NULL," ");
 
-  if(*cmd1 == 'N') {
+  switch (*cmd1) {
 
-    ESTADO e = {0};
-    e.grelha[3][4] = VALOR_X;
-    e.grelha[4][3] = VALOR_X;
-    e.grelha[3][3] = VALOR_O;
-    e.grelha[4][4] = VALOR_O;
+    case 'N':
+      if(*cmd2) {
+      //inicializa tabuleiro
+        for (i = 0; i < 8; i++)
+          for (j = 0; j < 8; j++) e.grelha[i][j] = VAZIA;
+        e.grelha[3][4] = VALOR_X;
+        e.grelha[4][3] = VALOR_X;
+        e.grelha[3][3] = VALOR_O;
+        e.grelha[4][4] = VALOR_O;
 
-    if(*cmd2 == 'O') e.peca = VALOR_O;
-    else e.peca = VALOR_X;
+        if(*cmd2 == 'O') {
+            var = 0;
+            e.peca = VALOR_O;
+            printf("\n");
+            printa(e,1,1);
+            printf("\n");
+            push(e); }
+        else if (*cmd2 == 'X') {
+            var = 0;
+            e.peca = VALOR_X;
+            printf("\n");
+            printa(e,1,1);
+            printf("\n");
+            push(e); }
+        else printf("Comando inválido\n");}
+      else printf("Comando inválido\n");
+      break;
 
-    printf("\n");
-    printa(e);
-    printf("\n");
+    case 'L':
+      if(*cmd2) {
+        if(var==0) leFicheiro(cmd2); }
+      else printf("Comando inválido\n");
+      break;
+
+    case 'E':
+      if(*cmd2) {
+        if(var==0) printE(e,cmd2); }
+      else printf("Comando inválido\n");
+      break;
+
+    case 'J':
+      if(cmd2 && cmd3) {
+        a = atoi(cmd2); b = atoi(cmd3);
+        if(var==0) jogada(e,t,a,b); }
+      else printf("Comando inválido\n");
+      break;
+
+    case 'S':
+      if(var==0) printa(e,0,1);
+      break;
+
+    case 'H':
+      if(var==0) printa(e,1,0);
+      break;
+
+    case 'U':
+      if(var==0) e = do_undo(e);
+      break;
+
+    case 'A':
+      break;
+
+    case 'Q':
+      exit(0);
+
+    default:
+      printf("Comando inválido\n");
+      break;
   }
-  else if(*cmd1 == 'L') {
-    leFicheiro();
-  }
-  else if(*cmd1 == 'J') {
-    a = atoi(cmd2); b = atoi(cmd3);
-    printf("%d\n", e.peca);
-    jogada(e,t,a,b);
-  }
-  else if(*cmd1 == 'S') printS(e);
-  else if(*cmd1 == 'Q') exit(0);
-  else printf("Comando inválido\n");
-
   return e;
 }
 
@@ -83,22 +120,20 @@ void menu()
   printf("-> H : receber sugestão de jogada\n");
   printf("-> U : desfazer última jogada\n");
   printf("-> A <peca> <nivel> : começar jogo com bot com peça <peca> e nível <nivel> (3 níveis disponíveis)\n");
+  printf("-> Q : sair do jogo\n");
 }
 
 int main()
 {
-    FILE *tab;
-    tab = fopen("reversi.txt","r+");
+  //estado inicial
+  ESTADO e = {0};
+  e.grelha[3][4] = VALOR_X;
+  e.grelha[4][3] = VALOR_X;
+  e.grelha[3][3] = VALOR_O;
+  e.grelha[4][4] = VALOR_O;
 
-    //estado inicial
-    ESTADO e = {0};
-    e.grelha[3][4] = VALOR_X;
-    e.grelha[4][3] = VALOR_X;
-    e.grelha[3][3] = VALOR_O;
-    e.grelha[4][4] = VALOR_O;
+  menu();
+  interpretador(e);
 
-    menu();
-    interpretador(e);
-
-    return 0;
+  return 0;
 }

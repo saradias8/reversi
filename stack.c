@@ -1,11 +1,16 @@
-#include <malloc.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include <malloc.h>
+#include "estado.h"
+#include "stack.h"
 
 //Inserir elementos no inicio
 void push(ESTADO e){
   //criar um novo nodo temp e alocar memoria
   struct Node* temp;
-  temp = (structNode*)malloc(sizeof(struct Node));
+  temp = (struct Node*)malloc(sizeof(struct Node));
 
   //verificar se a stack esta cheia“out-of-memory”
   if (!temp) {
@@ -13,7 +18,7 @@ void push(ESTADO e){
   }
 
   //introduzir os dados no respetivo campo em temp
-  temp->data = data;
+  temp->estado = e;
 
   //direcionar o apontador top para temp
   temp->next = top;
@@ -28,13 +33,11 @@ int isEmpty(){
 }
 
 //Indicar o elemento do topo da stack
-int peek()
+ESTADO peek()
 {
   //verificar se esta vazia
   if (!isEmpty(top))
     return top->estado;
-  else
-    return NULL;
 }
 
 //Remover o elemento no topo da stack
@@ -51,11 +54,13 @@ void pop(){
     //o nodo seguinte passa a ser o topo
     top = top->next;
     //libertar memoria do nodo de topo
-    free(temp);}
+    free(temp);
   }
+}
+
 //Mostrar o conteudo da stack
 void display(){
-  struct Node* temp;
+  struct Node* temp; char c;
   //verifica se esta vazia
   if (top == NULL) {
     printf("\nStack vazia");
@@ -64,17 +69,32 @@ void display(){
     temp = top;
     while (temp != NULL) {
       //imprime o valor do nodo
-      printf("%d->", temp->data);
-
+      for (i = 0; i < 8; i++) {
+      printf("%d ",(i+1));
+      for (j = 0; j < 8; j++) {
+        if(temp->estado.grelha[i][j] == VALOR_O)      c = 'O';
+        else if(temp->estado.grelha[i][j] == VALOR_X) c = 'X';
+        else if(temp->estado.grelha[i][j] == VAZIA)   c = '-';
+        printf("%c ", c);
+      }
+      printf("\n");
+    }
       //direciona o apontador para temp
       temp = temp->next;
     }
   }
 }
 
-ESTADO do_undo(ESTADO e)  //e toma o valor peek depois fazer pop -> UNDO
+ESTADO do_undo(ESTADO e)
 {
-  e = peek();
   pop();
+  if (top != NULL) {
+    //display();
+    e = peek();
+    printa(e,1,1);
+    return e;
+  }
+  push(e);
+  //printa(e,1,1);
   return e;
 }

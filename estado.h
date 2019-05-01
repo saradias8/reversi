@@ -7,8 +7,6 @@ estado.h
 Definição do estado i.e. tabuleiro. Representação matricial do tabuleiro.
 */
 
-
-
 // definição de valores possiveis no tabuleiro
 typedef enum {VAZIA, VALOR_X, VALOR_O, POSSIBLE} VALOR;
 
@@ -23,10 +21,11 @@ typedef struct estado {
 
 int line, column, i, j;
 
-void printa(ESTADO);
+void printa(ESTADO,int,int);
 void jogada(ESTADO,int,int,int);
 void leFicheiro();
 void interpretador(ESTADO);
 void printS();
+void printE();
 
 #endif //PROJ_ESTADO_H
