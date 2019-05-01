@@ -217,12 +217,13 @@ void printE(ESTADO e, char* cmd2)
     FILE *tab;
     tab = fopen(cmd2,"w");
 
-    if(e.peca == VALOR_O)
-      fprintf(tab,"O\n");
+    if(e.modo == '0') fprintf(tab,"M ");
+    else fprintf(tab,"A ");
+
+    if(e.peca == VALOR_O) fprintf(tab,"O\n");
     else fprintf(tab,"X\n");
 
-    if(e.peca == VALOR_O)
-      printf("Vez do jogador O\n\n");
+    if(e.peca == VALOR_O) printf("Vez do jogador O\n\n");
     else printf("Vez do jogador X\n\n");
 
     printf("  1 2 3 4 5 6 7 8 \n");
@@ -454,19 +455,30 @@ ESTADO jogada(ESTADO e, int line, int column)
   return e;
 }
 
-ESTADO leFicheiro(char *cmd2)
+ESTADO leFicheiro(ESTADO e,char *cmd2)
 {
-  char c; int col;
+  char c,mode,peca,level; int col;
   FILE *file;
-  file = fopen(cmd2,"r");
+  file = fopen(cmd2,"r+");
 
+  fscanf(file,"%c %c %c",&mode,&peca,&level);
+
+  if(mode == 'M') e.modo = '0';
+  else e.modo = '1';
+  if(peca == 'O') e.peca = VALOR_O;
+  else e.peca = VALOR_X;
+/*
+  printf("%c\n",level);
+
+  fscanf(file,"%c %c", &mode,&peca);
+  printf("%c %c\n", mode, peca);
+
+  for(i=0;i<8;i++)
+    fscanf(file,"%c %c %c %c %c")
+*/
   //prints file
-  while((c = fgetc(file)) != EOF)
-    printf("%c", c);
-
-  //for(i=0;i<8;i++){
-  //  sscanf("%c %c %c %c %c", )
-  //}
+  //while((c = fgetc(file)) != EOF)
 
   fclose(file);
+  return e;
 }

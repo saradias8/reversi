@@ -25,7 +25,7 @@ int listAS(ESTADO);
 void printa(ESTADO,int,int);
 ESTADO preenche(ESTADO,int,int);
 ESTADO jogada(ESTADO,int,int);
-ESTADO leFicheiro(char *);
+ESTADO leFicheiro(ESTADO,char*);
 void interpretador(ESTADO);
 void printS();
 void printE();

@@ -31,8 +31,7 @@ ESTADO commands(ESTADO e,char linha[])
 
     case 'N':
       if(cmd2) {
-        clean();
-      //inicializa tabuleiro
+        //inicializa tabuleiro
         for (i = 0; i < 8; i++)
           for (j = 0; j < 8; j++) e.grelha[i][j] = VAZIA;
         e.grelha[3][4] = VALOR_X;
@@ -41,6 +40,8 @@ ESTADO commands(ESTADO e,char linha[])
         e.grelha[4][4] = VALOR_O;
 
         if(*cmd2 == 'O') {
+            e.modo = '0';
+            clean();
             var = 0;
             e.peca = VALOR_O;
             printf("\n");
@@ -48,6 +49,8 @@ ESTADO commands(ESTADO e,char linha[])
             printf("\n");
             push(e); }
         else if (*cmd2 == 'X') {
+            e.modo = '0';
+            clean();
             var = 0;
             e.peca = VALOR_X;
             printf("\n");
@@ -59,8 +62,7 @@ ESTADO commands(ESTADO e,char linha[])
       break;
 
     case 'L':
-      if(cmd2) {
-        if(var==0) leFicheiro(cmd2); }
+      if(cmd2) e = leFicheiro(e,cmd2); 
       else printf("Comando inválido\n");
       break;
 
@@ -71,7 +73,7 @@ ESTADO commands(ESTADO e,char linha[])
       break;
 
     case 'J':
-      if(listAS(e) == 0) {printf("Não existem jogadas válidas\n"); jogada(e,1,1);}
+      if(listAS(e) == 0) {printf("Não existem jogadas válidas\n"); jogada(e,0,0);}
       else if(cmd2 && cmd3) {
           a = atoi(cmd2); b = atoi(cmd3);
           if(var==0) jogada(e,a,b); }
@@ -89,13 +91,13 @@ ESTADO commands(ESTADO e,char linha[])
     case 'U':
       if(var==0) e = do_undo(e);
       break;
-/*
+
     case 'A':
-      if(cmd2 && cmd3)
-        if(var==0) bot(e,cmd2);
+      if(cmd2 && cmd3) ;
+        //if(var==0) bot(e,cmd2);
       else printf("Comando inválido\n");
       break;
-*/
+
     case 'Q':
       exit(0);
 
