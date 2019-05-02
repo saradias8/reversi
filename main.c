@@ -62,7 +62,7 @@ ESTADO commands(ESTADO e,char linha[])
       break;
 
     case 'L':
-      if(cmd2) e = leFicheiro(e,cmd2); 
+      if(cmd2) {e = leFicheiro(e,cmd2); var = 0;}
       else printf("Comando inválido\n");
       break;
 
@@ -93,7 +93,7 @@ ESTADO commands(ESTADO e,char linha[])
       break;
 
     case 'A':
-      if(cmd2 && cmd3) ;
+      if(cmd2 && cmd3) e.modo = '1';
         //if(var==0) bot(e,cmd2);
       else printf("Comando inválido\n");
       break;

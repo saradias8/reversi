@@ -457,7 +457,7 @@ ESTADO jogada(ESTADO e, int line, int column)
 
 ESTADO leFicheiro(ESTADO e,char *cmd2)
 {
-  char c,mode,peca,level; int col;
+  char mode,peca,level; int c,i,j=0;
   FILE *file;
   file = fopen(cmd2,"r+");
 
@@ -465,19 +465,23 @@ ESTADO leFicheiro(ESTADO e,char *cmd2)
 
   if(mode == 'M') e.modo = '0';
   else e.modo = '1';
+
   if(peca == 'O') e.peca = VALOR_O;
   else e.peca = VALOR_X;
-/*
-  printf("%c\n",level);
 
-  fscanf(file,"%c %c", &mode,&peca);
-  printf("%c %c\n", mode, peca);
+  if(e.modo == '0') fseek(file,4,SEEK_SET);
+  else fseek(file,6,SEEK_SET);
 
-  for(i=0;i<8;i++)
-    fscanf(file,"%c %c %c %c %c")
-*/
-  //prints file
-  //while((c = fgetc(file)) != EOF)
+  while((c = fgetc(file)) != EOF) {
+    for(i=0;i<8;i++) {
+      while(j<8) {
+        if(c == 'X') {e.grelha[i][j] = VALOR_X; j++; printf("%c ",c);}
+        else if(c == 'O') {e.grelha[i][j] = VALOR_O; j++; printf("%c ",c);}
+        else if(c == '-') {e.grelha[i][j] = VAZIA; j++; printf("%c ",c);}
+      }
+    }
+  }
+  //fscanf(file,"%c %c %c %c %c %c %c %c"); //wont work
 
   fclose(file);
   return e;
