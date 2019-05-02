@@ -27,6 +27,8 @@ ESTADO commands(ESTADO e,char linha[])
   cmd2 = strtok(NULL," ");
   cmd3 = strtok(NULL," ");
 
+  if(cmd2 && cmd3 == NULL) cmd2[strlen(cmd2)-1] = '\0';
+
   switch (*cmd1) {
 
     case 'N':

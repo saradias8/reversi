@@ -223,8 +223,8 @@ void printE(ESTADO e, char* cmd2)
     if(e.peca == VALOR_O) fprintf(tab,"O\n");
     else fprintf(tab,"X\n");
 
-    if(e.peca == VALOR_O) printf("Vez do jogador O\n\n");
-    else printf("Vez do jogador X\n\n");
+    if(e.peca == VALOR_O) printf("\nVez do jogador O\n\n");
+    else printf("\nVez do jogador X\n\n");
 
     printf("  1 2 3 4 5 6 7 8 \n");
     for (i = 0; i < 8; i++) {
@@ -239,6 +239,11 @@ void printE(ESTADO e, char* cmd2)
       fprintf(tab,"\n");
       printf("\n");
     }
+    printf("\n");
+    printf("Score O: %d\n", scoreO(e));
+    printf("Score X: %d\n", scoreX(e));
+    printf("\n");
+
     fclose(tab);
 }
 
@@ -457,7 +462,7 @@ ESTADO jogada(ESTADO e, int line, int column)
 
 ESTADO leFicheiro(ESTADO e,char *cmd2)
 {
-  char mode,peca,level; int c,i,j=0;
+  char mode,peca,level; int c,i=0,j=0;
   FILE *file;
   file = fopen(cmd2,"r+");
 
@@ -469,19 +474,27 @@ ESTADO leFicheiro(ESTADO e,char *cmd2)
   if(peca == 'O') e.peca = VALOR_O;
   else e.peca = VALOR_X;
 
+  printf("\nVez do Jogador %c\n\n",peca);
+
   if(e.modo == '0') fseek(file,4,SEEK_SET);
   else fseek(file,6,SEEK_SET);
 
+  printf("  1 2 3 4 5 6 7 8\n");
+  printf("1 ");
   while((c = fgetc(file)) != EOF) {
-    for(i=0;i<8;i++) {
-      while(j<8) {
         if(c == 'X') {e.grelha[i][j] = VALOR_X; j++; printf("%c ",c);}
         else if(c == 'O') {e.grelha[i][j] = VALOR_O; j++; printf("%c ",c);}
         else if(c == '-') {e.grelha[i][j] = VAZIA; j++; printf("%c ",c);}
-      }
-    }
+        else if(c == '\n') {
+          i++;
+          if(i<8) printf("\n%d ",i+1);
+          j=0;
+        }
   }
-  //fscanf(file,"%c %c %c %c %c %c %c %c"); //wont work
+  printf("\n\n");
+  printf("Score O: %d\n", scoreO(e));
+  printf("Score X: %d\n", scoreX(e));
+  printf("\n");
 
   fclose(file);
   return e;
