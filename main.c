@@ -6,7 +6,6 @@
 #include "stack.h"
 #include "bot.h"
 
-//variáveis globais
 ESTADO e = {0};
 static int var = 1;
 
@@ -21,17 +20,22 @@ ESTADO commands(ESTADO e,char linha[])
   char *cmd1, *cmd2, *cmd3;
   int i=0; int a,b;
 
-  while(linha[i]) {linha[i] = toupper(linha[i]); i++;}
+  //while(linha[i]) {linha[i] = toupper(linha[i]); i++;}
 
   cmd1 = strtok(linha," ");
   cmd2 = strtok(NULL," ");
   cmd3 = strtok(NULL," ");
+
+  while(cmd1[i]) {cmd1[i] = toupper(cmd1[i]); i++;}
+  i=0;
 
   if(cmd2 && cmd3 == NULL) cmd2[strlen(cmd2)-1] = '\0';
 
   switch (*cmd1) {
 
     case 'N':
+      while(cmd2[i]) {cmd2[i] = toupper(cmd2[i]); i++;}
+      i=0;
       if(cmd2) {
         //inicializa tabuleiro
         for (i = 0; i < 8; i++)
@@ -46,18 +50,14 @@ ESTADO commands(ESTADO e,char linha[])
             clean();
             var = 0;
             e.peca = VALOR_O;
-            printf("\n");
             printa(e,1,1);
-            printf("\n");
             push(e); }
         else if (*cmd2 == 'X') {
             e.modo = '0';
             clean();
             var = 0;
             e.peca = VALOR_X;
-            printf("\n");
             printa(e,1,1);
-            printf("\n");
             push(e); }
         else printf("Comando inválido\n");}
       else printf("Comando inválido\n");
@@ -75,6 +75,8 @@ ESTADO commands(ESTADO e,char linha[])
       break;
 
     case 'J':
+      while(cmd2[i]) {cmd2[i] = toupper(cmd2[i]); i++;}
+      i=0;
       if(listAS(e) == 0) {printf("Não existem jogadas válidas\n"); jogada(e,0,0);}
       else if(cmd2 && cmd3) {
           a = atoi(cmd2); b = atoi(cmd3);
@@ -95,6 +97,8 @@ ESTADO commands(ESTADO e,char linha[])
       break;
 
     case 'A':
+      while(cmd2[i]) {cmd2[i] = toupper(cmd2[i]); i++;}
+      i=0;
       if(cmd2 && cmd3) e.modo = '1';
         //if(var==0) bot(e,cmd2);
       else printf("Comando inválido\n");

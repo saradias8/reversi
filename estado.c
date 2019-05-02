@@ -182,7 +182,6 @@ int listAS(ESTADO e)
         c++;
       }
     }
-    printf("\n");
   return c;
 }
 
@@ -192,8 +191,8 @@ void printa(ESTADO e, int m, int n)
   char c = ' '; int i,j, p = 0;
 
   if(e.peca == VALOR_O)
-    printf("Vez do jogador O\n\n");
-  else if (e.peca == VALOR_X) printf("Vez do jogador X\n\n");
+    printf("\nVez do jogador O\n\n");
+  else printf("\nVez do jogador X\n\n");
 
   printf("  1 2 3 4 5 6 7 8 \n");
   for (i = 0; i < 8; i++) {
@@ -206,8 +205,12 @@ void printa(ESTADO e, int m, int n)
       else if(e.grelha[i][j] == VAZIA)   c = '-';
       printf("%c ", c);
     }
-      printf("\n");
-    }
+    printf("\n");
+  }
+  printf("\n");
+  printf("Score O: %d\n", scoreO(e));
+  printf("Score X: %d\n", scoreX(e));
+  printf("\n");
 }
 
 //funcao que guarda estado em ficheiro
@@ -448,12 +451,7 @@ ESTADO jogada(ESTADO e, int line, int column)
     else e.peca = VALOR_O;
     if (tpm > 1) endGame(e);
   }
-
-  printf("\n"); printa(e,1,1); printf("\n");
-
-  printf("Score O: %d\n", scoreO(e));
-  printf("Score X: %d\n", scoreX(e));
-  printf("\n");
+  printa(e,1,1);
 
   if(cheio(e) == 0) endGame(e);
   interpretador(e);
