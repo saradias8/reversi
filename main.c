@@ -20,8 +20,6 @@ ESTADO commands(ESTADO e,char linha[])
   char *cmd1, *cmd2, *cmd3;
   int i=0; int a,b;
 
-  //while(linha[i]) {linha[i] = toupper(linha[i]); i++;}
-
   cmd1 = strtok(linha," ");
   cmd2 = strtok(NULL," ");
   cmd3 = strtok(NULL," ");
@@ -59,29 +57,27 @@ ESTADO commands(ESTADO e,char linha[])
             e.peca = VALOR_X;
             printa(e,1,1);
             push(e); }
-        else printf("Comando inválido\n");}
-      else printf("Comando inválido\n");
+        else printf("Comando inválido\n\n");}
+      else printf("Comando inválido\n\n");
       break;
 
     case 'L':
       if(cmd2) {e = leFicheiro(e,cmd2); var = 0;}
-      else printf("Comando inválido\n");
+      else printf("Comando inválido\n\n");
       break;
 
     case 'E':
       if(cmd2) {
         if(var==0) printE(e,cmd2); }
-      else printf("Comando inválido\n");
+      else printf("Comando inválido\n\n");
       break;
 
     case 'J':
-      while(cmd2[i]) {cmd2[i] = toupper(cmd2[i]); i++;}
-      i=0;
       if(listAS(e) == 0) {printf("Não existem jogadas válidas\n"); jogada(e,0,0);}
       else if(cmd2 && cmd3) {
           a = atoi(cmd2); b = atoi(cmd3);
           if(var==0) jogada(e,a,b); }
-      else printf("Comando inválido\n");
+      else printf("Comando inválido\n\n");
       break;
 
     case 'S':
@@ -97,18 +93,20 @@ ESTADO commands(ESTADO e,char linha[])
       break;
 
     case 'A':
+      printf("111");
       while(cmd2[i]) {cmd2[i] = toupper(cmd2[i]); i++;}
       i=0;
       if(cmd2 && cmd3) e.modo = '1';
-        //if(var==0) bot(e,cmd2);
-      else printf("Comando inválido\n");
+      printf("111");
+      if(*cmd3 == '1') botN1(e);
+      else printf("Comando inválido\n\n");
       break;
 
     case 'Q':
       exit(0);
 
     default:
-      printf("Comando inválido\n");
+      printf("Comando inválido\n\n");
       break;
   }
   return e;

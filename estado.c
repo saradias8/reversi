@@ -167,10 +167,10 @@ VALOR pecas(ESTADO e, int line, int column)
 // variável global -> lista de posições possíveis
 char* string[MAX];
 //função que dá a lista de posições onde o jogador atual pode jogar
-int listAS(ESTADO e)
+char* listAS(ESTADO e)
 {
   int c = 0; int i,j;
-  char line[2]; char column[10];
+  char line[2],column[10];
 
   for(i=0;i<8;i++)
     for (j=0;j<8;j++) {
@@ -182,7 +182,7 @@ int listAS(ESTADO e)
         c++;
       }
     }
-  return c;
+  return *string;
 }
 
 // função que imprime estado do jogo
@@ -298,6 +298,7 @@ ESTADO preenche(ESTADO e, int line, int column) //ERRO !!!
       if(e.grelha[line][j] == VALOR_X) x++;
       else if (e.grelha[line][j] == VALOR_O && x>0) {
         for (y2 = (j-1); y2>column; y2--) e.grelha[line][y2] = VALOR_O;
+        break;
       }
       else break;
     }
@@ -306,6 +307,7 @@ ESTADO preenche(ESTADO e, int line, int column) //ERRO !!!
       if(e.grelha[line][j] == VALOR_X) x++;
       else if (e.grelha[line][j] == VALOR_O && x>0) {
         for (y2 = (j+1); y2<column; y2++) e.grelha[line][y2] = VALOR_O;
+        break;
       }
       else break;
     }
@@ -314,6 +316,7 @@ ESTADO preenche(ESTADO e, int line, int column) //ERRO !!!
       if(e.grelha[i][column] == VALOR_X) x++;
       else if (e.grelha[i][column] == VALOR_O && x>0) {
         for (y1 = (i-1); y1>line; y1--) e.grelha[y1][column] = VALOR_O;
+        break;
       }
       else break;
     }
@@ -322,6 +325,7 @@ ESTADO preenche(ESTADO e, int line, int column) //ERRO !!!
       if(e.grelha[i][column] == VALOR_X) x++;
       else if (e.grelha[i][column] == VALOR_O && x>0) {
         for (y1 = (i+1); y1<line; y1++) e.grelha[y1][column] = VALOR_O;
+        break;
     }
       else break;
     }
@@ -330,6 +334,7 @@ ESTADO preenche(ESTADO e, int line, int column) //ERRO !!!
       if(e.grelha[i][j] == VALOR_X) x++;
       else if (e.grelha[i][j] == VALOR_O && x>0) {
         for (y1 = (i-1), y2 = (j-1); y1>line, y2>column; y1--, y2--) e.grelha[y1][y2] = VALOR_O;
+        break;
     }
       else break;
     }
@@ -338,6 +343,7 @@ ESTADO preenche(ESTADO e, int line, int column) //ERRO !!!
       if(e.grelha[i][j] == VALOR_X) x++;
       else if (e.grelha[i][j] == VALOR_O && x>0) {
         for (y1 = (i+1), y2 = (j+1); y1<line, y2<column; y1++, y2++) e.grelha[y1][y2] = VALOR_O;
+        break;
     }
       else break;
     }
@@ -346,6 +352,7 @@ ESTADO preenche(ESTADO e, int line, int column) //ERRO !!!
       if(e.grelha[i][j] == VALOR_X) x++;
       else if (e.grelha[i][j] == VALOR_O && x>0) {
         for (y1 = (i-1), y2 = (j+1); y1>line, y2<column; y1--, y2++) e.grelha[y1][y2] = VALOR_O;
+        break;
     }
       else break;
     }
@@ -354,6 +361,7 @@ ESTADO preenche(ESTADO e, int line, int column) //ERRO !!!
       if(e.grelha[i][j] == VALOR_X) x++;
       else if (e.grelha[i][j] == VALOR_O && x>0) {
         for (y1 = (i+1), y2 = (j-1); y1<line, y2>column; y1++, y2--) e.grelha[y1][y2] = VALOR_O;
+        break;
     }
       else break;
     }
@@ -366,6 +374,7 @@ ESTADO preenche(ESTADO e, int line, int column) //ERRO !!!
       if(e.grelha[line][j] == VALOR_O) x++;
       else if (e.grelha[line][j] == VALOR_X && x>0) {
         for (y2 = (j-1); y2>column; y2--) e.grelha[line][y2] = VALOR_X;
+        break;
       }
       else break;
     }
@@ -374,6 +383,7 @@ ESTADO preenche(ESTADO e, int line, int column) //ERRO !!!
       if(e.grelha[line][j] == VALOR_O) x++;
       else if (e.grelha[line][j] == VALOR_X && x>0) {
         for (y2 = (j+1); y2<column; y2++) e.grelha[line][y2] = VALOR_X;
+        break;
       }
       else break;
     }
@@ -382,6 +392,7 @@ ESTADO preenche(ESTADO e, int line, int column) //ERRO !!!
       if(e.grelha[i][column] == VALOR_O) x++;
       else if (e.grelha[i][column] == VALOR_X && x>0) {
         for (y1 = (i-1); y1>line; y1--) e.grelha[y1][column] = VALOR_X;
+        break;
       }
       else break;
     }
@@ -390,6 +401,7 @@ ESTADO preenche(ESTADO e, int line, int column) //ERRO !!!
       if(e.grelha[i][column] == VALOR_O) x++;
       else if (e.grelha[i][column] == VALOR_X && x>0) {
         for (y1 = (i+1); y1<line; y1++) e.grelha[y1][column] = VALOR_X;
+        break;
     }
       else break;
     }
@@ -398,6 +410,7 @@ ESTADO preenche(ESTADO e, int line, int column) //ERRO !!!
       if(e.grelha[i][j] == VALOR_O) x++;
       else if (e.grelha[i][j] == VALOR_X && x>0) {
         for (y1 = (i-1), y2 = (j-1); y1>line, y2>column; y1--, y2--) e.grelha[y1][y2] = VALOR_X;
+        break;
     }
       else break;
     }
@@ -406,6 +419,7 @@ ESTADO preenche(ESTADO e, int line, int column) //ERRO !!!
       if(e.grelha[i][j] == VALOR_O) x++;
       else if (e.grelha[i][j] == VALOR_X && x>0) {
         for (y1 = (i+1), y2 = (j+1); y1<line, y2<column; y1++, y2++) e.grelha[y1][y2] = VALOR_X;
+        break;
     }
       else break;
     }
@@ -414,6 +428,7 @@ ESTADO preenche(ESTADO e, int line, int column) //ERRO !!!
       if(e.grelha[i][j] == VALOR_O) x++;
       else if (e.grelha[i][j] == VALOR_X && x>0) {
         for (y1 = (i-1), y2 = (j+1); y1>line, y2<column; y1--, y2++) e.grelha[y1][y2] = VALOR_X;
+        break;
     }
       else break;
     }
@@ -422,6 +437,7 @@ ESTADO preenche(ESTADO e, int line, int column) //ERRO !!!
       if(e.grelha[i][j] == VALOR_O) x++;
       else if (e.grelha[i][j] == VALOR_X && x>0) {
         for (y1 = (i+1), y2 = (j-1); y1<line, y2>column; y1++, y2--) e.grelha[y1][y2] = VALOR_X;
+        break;
     }
       else break;
     }
@@ -434,7 +450,7 @@ ESTADO jogada(ESTADO e, int line, int column)
 {
   line--;column--;
 
-  if(listAS(e) > 0) {
+  if(strlen(listAS(e)) > 0) {
     if(pecas(e,line,column) == POSSIBLE && line<8 && column<8) {
       tpm=0;
       e = preenche(e,line,column);

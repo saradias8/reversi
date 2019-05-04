@@ -2,6 +2,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include "estado.h"
+
+void botN1(ESTADO e)
+{
+  char* string[MAX]; char* pos;
+  char line,column;
+
+  if(strlen(listAS(e)) > 0) {
+    strcpy(*string,listAS(e));
+    pos = string[0];
+    line = pos[0]; column = pos[1];
+  }
+}
+
 /*
 ESTADO bot(ESTADO e, char *cmd2) {
   int i, j, x = 0, y, l, c, r;

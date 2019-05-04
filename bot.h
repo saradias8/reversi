@@ -6,7 +6,6 @@ typedef struct nodo {
   int col;
   struct nodo *esq, *dir;
 } *ABin;
-
-ESTADO bot(ESTADO,char*);
+void botN1(ESTADO);
 
 #endif

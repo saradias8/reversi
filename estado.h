@@ -21,7 +21,7 @@ typedef struct estado {
 
 int line, column, i, j;
 
-int listAS(ESTADO);
+char* listAS(ESTADO);
 void printa(ESTADO,int,int);
 ESTADO preenche(ESTADO,int,int);
 ESTADO jogada(ESTADO,int,int);
