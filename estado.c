@@ -3,6 +3,7 @@
 #include <string.h>
 #include "estado.h"
 #include "stack.h"
+#include "bot.h"
 
 //função que verifica as posições onde é possível jogar
 VALOR pecas(ESTADO e, int line, int column)
@@ -167,7 +168,7 @@ VALOR pecas(ESTADO e, int line, int column)
 // variável global -> lista de posições possíveis
 char* string[MAX];
 //função que dá a lista de posições onde o jogador atual pode jogar
-char* listAS(ESTADO e)
+int listAS(ESTADO e)
 {
   int c = 0; int i,j;
   char line[2],column[10];
@@ -182,7 +183,7 @@ char* listAS(ESTADO e)
         c++;
       }
     }
-  return *string;
+  return c;
 }
 
 // função que imprime estado do jogo
@@ -214,7 +215,7 @@ void printa(ESTADO e, int m, int n)
 }
 
 //funcao que guarda estado em ficheiro
-void printE(ESTADO e, char* cmd2)
+void printE(ESTADO e, char* cmd2) // FALTA NÍVEL DO BOT
 {
     char c = ' '; int i,j;
     FILE *tab;
@@ -223,8 +224,10 @@ void printE(ESTADO e, char* cmd2)
     if(e.modo == '0') fprintf(tab,"M ");
     else fprintf(tab,"A ");
 
-    if(e.peca == VALOR_O) fprintf(tab,"O\n");
-    else fprintf(tab,"X\n");
+    if(e.peca == VALOR_O && e.modo == '0') fprintf(tab,"O\n");
+    else if(e.peca == VALOR_X && e.modo == '0') fprintf(tab,"X\n");
+    else if(e.peca == VALOR_O && e.modo == '1') fprintf(tab,"O 2\n");
+    else fprintf(tab,"X 2\n");
 
     if(e.peca == VALOR_O) printf("\nVez do jogador O\n\n");
     else printf("\nVez do jogador X\n\n");
@@ -283,8 +286,6 @@ void endGame (ESTADO e)
   else if (scoreO(e) < scoreX(e)) printf("O vencedor é o Jogador X!\n");
   else printf("Empataram... SMH\n");
 }
-//variável global
-static int tpm=0;
 
 // atualiza as peças do tabuleiro quando é efetuada uma jogada
 ESTADO preenche(ESTADO e, int line, int column) //ERRO !!!
@@ -448,27 +449,31 @@ ESTADO preenche(ESTADO e, int line, int column) //ERRO !!!
 //função que lê a jogada e verifica se é válida
 ESTADO jogada(ESTADO e, int line, int column)
 {
-  line--;column--;
+  line--; column--;
 
-  if(strlen(listAS(e)) > 0) {
+  if(listAS(e) > 0) {
     if(pecas(e,line,column) == POSSIBLE && line<8 && column<8) {
       tpm=0;
       e = preenche(e,line,column);
       if(e.peca == VALOR_O) {e.peca = VALOR_X;}
       else {e.peca = VALOR_O;}
       push(e);
+      printa(e,1,1);
+      if (e.modo == '1') botN2(e);
     }
-    else printf("Jogada inválida.\n");
+    else {
+      printf("Jogada inválida.\n");
+      printa(e,1,1);
+    }
   }
   else {
     tpm++;
-    //printf("Não existem jogadas válidas\n");
     if(e.peca == VALOR_O) e.peca = VALOR_X;
     else e.peca = VALOR_O;
     if (tpm > 1) endGame(e);
+    printa(e,1,1);
   }
-  printa(e,1,1);
-
+  
   if(cheio(e) == 0) endGame(e);
   interpretador(e);
   return e;

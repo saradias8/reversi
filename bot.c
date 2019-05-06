@@ -2,47 +2,60 @@
 #include <stdlib.h>
 #include <string.h>
 #include "estado.h"
+#include "stack.h"
 
-void botN1(ESTADO e)
+ESTADO jogadabot(ESTADO e, int line, int column)
 {
-  char* string[MAX]; char* pos;
-  char line,column;
+  line--;column--;
 
-  if(strlen(listAS(e)) > 0) {
-    strcpy(*string,listAS(e));
-    pos = string[0];
-    line = pos[0]; column = pos[1];
+  if(listAS(e) > 0) {
+    if(pecas(e,line,column) == POSSIBLE && line<8 && column<8) {
+      tpm=0;
+      e = preenche(e,line,column);
+      printf("Posição da jogada do bot: (%d,%d)\n",line+1,column+1);
+      if(e.peca == VALOR_O) {e.peca = VALOR_X;}
+      else {e.peca = VALOR_O;}
+    }
+    else printf("Jogada inválida.\n");
   }
+  else {
+    tpm++;
+    //printf("Não existem jogadas válidas\n");
+    if(e.peca == VALOR_O) e.peca = VALOR_X;
+    else e.peca = VALOR_O;
+    if (tpm > 1) endGame(e);
+  }
+  printa(e,1,1);
+
+  if(cheio(e) == 0) endGame(e);
+  interpretador(e);
+  return e;
 }
 
-/*
-ESTADO bot(ESTADO e, char *cmd2) {
-  int i, j, x = 0, y, l, c, r;
+void botN2(ESTADO e) {
+  int i, j, maior = 0, y, l, c;
   ESTADO tmp;
-  if (*cmd2 == 'O') e.peca = VALOR_O;
-  else if (*cmd2 == 'X') e.peca = VALOR_X;
+
   for (i = 0; i < 8; i++)
     for (j = 0; j < 8; j++)
       if(pecas(e,i,j) == POSSIBLE)  {
         tmp = preenche(e,i,j);
         if (e.peca==VALOR_O) {
-          y =scoreO(e) - scoreO(tmp);
-          if (y>x) {
-            x = y;
+          y =scoreO(tmp) - scoreO(e);
+          if (y>maior) {
+            maior = y;
             l = i;
             c = j;
           }
         }
         else if (e.peca==VALOR_X) {
-          y =scoreX(e) - scoreX(tmp);
-          if (y>x) {
-            x = y;
-            r = tmp;
+          y =scoreX(tmp) - scoreX(e);
+          if (y>maior) {
+            maior = y;
             l = i;
             c = j;
           }
         }
       }
-    r = l * 10 + c;
-  return r;
-}*/
+  jogadabot(e,l+1,c+1);
+}

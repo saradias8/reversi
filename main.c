@@ -36,8 +36,8 @@ ESTADO commands(ESTADO e,char linha[])
       i=0;
       if(cmd2) {
         //inicializa tabuleiro
-        for (i = 0; i < 8; i++)
-          for (j = 0; j < 8; j++) e.grelha[i][j] = VAZIA;
+        for (l = 0; l < 8; l++)
+          for (j = 0; j < 8; j++) e.grelha[l][j] = VAZIA;
         e.grelha[3][4] = VALOR_X;
         e.grelha[4][3] = VALOR_X;
         e.grelha[3][3] = VALOR_O;
@@ -49,20 +49,26 @@ ESTADO commands(ESTADO e,char linha[])
             var = 0;
             e.peca = VALOR_O;
             printa(e,1,1);
-            push(e); }
+            push(e);
+        }
         else if (*cmd2 == 'X') {
             e.modo = '0';
             clean();
             var = 0;
             e.peca = VALOR_X;
             printa(e,1,1);
-            push(e); }
-        else printf("Comando inválido\n\n");}
+            push(e);
+        }
+        else printf("Comando inválido\n\n");
+      }
       else printf("Comando inválido\n\n");
       break;
 
     case 'L':
-      if(cmd2) {e = leFicheiro(e,cmd2); var = 0;}
+      if(cmd2){
+        e = leFicheiro(e,cmd2);
+        var = 0;
+      }
       else printf("Comando inválido\n\n");
       break;
 
@@ -73,10 +79,14 @@ ESTADO commands(ESTADO e,char linha[])
       break;
 
     case 'J':
-      if(listAS(e) == 0) {printf("Não existem jogadas válidas\n"); jogada(e,0,0);}
+      if(listAS(e) == 0) {
+        printf("Não existem jogadas válidas\n");
+        jogada(e,0,0);
+      }
       else if(cmd2 && cmd3) {
           a = atoi(cmd2); b = atoi(cmd3);
-          if(var==0) jogada(e,a,b); }
+          if(var==0) jogada(e,a,b);
+      }
       else printf("Comando inválido\n\n");
       break;
 
@@ -93,12 +103,36 @@ ESTADO commands(ESTADO e,char linha[])
       break;
 
     case 'A':
-      printf("111");
+      if(cmd2 && cmd3) {
+        clean();
+        e.modo = '1';
+      }
       while(cmd2[i]) {cmd2[i] = toupper(cmd2[i]); i++;}
       i=0;
-      if(cmd2 && cmd3) e.modo = '1';
-      printf("111");
-      if(*cmd3 == '1') botN1(e);
+
+      for (l = 0; l < 8; l++)
+        for (j = 0; j < 8; j++) e.grelha[l][j] = VAZIA;
+      e.grelha[3][4] = VALOR_X;
+      e.grelha[4][3] = VALOR_X;
+      e.grelha[3][3] = VALOR_O;
+      e.grelha[4][4] = VALOR_O;
+
+      if(*cmd2 == 'O') e.peca = VALOR_O;
+      else if(*cmd2 == 'X') e.peca = VALOR_X;
+      else printf("Comando inválido\n\n");
+
+      if(*cmd3 == '2' && e.peca == VALOR_X) {
+        printa(e,1,1); push(e);
+        var = 0;
+        e.modo = '1';
+        botN2(e);
+       }
+      else if(*cmd3 == '2' && e.peca == VALOR_O) {
+        var = 0;
+        e.peca = VALOR_X;
+        e.modo = '1';
+        printa(e,1,1);
+      }
       else printf("Comando inválido\n\n");
       break;
 

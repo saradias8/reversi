@@ -19,9 +19,10 @@ typedef struct estado {
     char modo; // modo em que se está a jogar! 0-> manual, 1-> contra computador
 } ESTADO;
 
-int line, column, i, j;
+int line, column, i, l, j;
+static int tpm=0;
 
-char* listAS(ESTADO);
+int listAS(ESTADO);
 void printa(ESTADO,int,int);
 ESTADO preenche(ESTADO,int,int);
 ESTADO jogada(ESTADO,int,int);
@@ -32,5 +33,7 @@ void printE();
 VALOR pecas(ESTADO,int,int);
 int scoreO(ESTADO);
 int scoreX(ESTADO);
+int cheio(ESTADO);
+void endGame(ESTADO);
 
 #endif //PROJ_ESTADO_H

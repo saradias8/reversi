@@ -7,20 +7,19 @@
 #include "stack.h"
 
 //Inserir elementos no inicio
-void push(ESTADO e){
+void push(ESTADO e)
+{
   struct Node* temp;
   temp = (struct Node*)malloc(sizeof(struct Node));
 
-  if (!temp) {
-    printf("\nStack sobrelotada");
-  }
   temp->estado = e;
   temp->next = top;
   top = temp;
 }
 
 //Verificar se a stack esta vazia
-int isEmpty(){
+int isEmpty()
+{
   return top == NULL;
 }
 
@@ -32,40 +31,14 @@ ESTADO peek()
 }
 
 //Remover o elemento no topo da stack
-void pop(){
+void pop()
+{
   struct Node* temp;
 
-  if (top == NULL) {
-    printf("\nStack vazia");
-  }
-  else {
+  if (top != NULL){
     temp = top;
     top = top->next;
     free(temp);
-  }
-}
-
-//Mostrar o conteudo da stack
-void display(){
-  struct Node* temp; char c;
-  if (top == NULL) {
-    printf("\nStack vazia");
-  }
-  else {
-    temp = top;
-    while (temp != NULL) {
-      for (i = 0; i < 8; i++) {
-      printf("%d ",(i+1));
-      for (j = 0; j < 8; j++) {
-        if(temp->estado.grelha[i][j] == VALOR_O)      c = 'O';
-        else if(temp->estado.grelha[i][j] == VALOR_X) c = 'X';
-        else if(temp->estado.grelha[i][j] == VAZIA)   c = '-';
-        printf("%c ", c);
-      }
-      printf("\n");
-    }
-      temp = temp->next;
-    }
   }
 }
 

@@ -13,7 +13,6 @@ void push(ESTADO);
 int isEmpty();
 ESTADO peek();
 void pop();
-void display();
 ESTADO do_undo(ESTADO);
 
 #endif
