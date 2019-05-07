@@ -6,7 +6,10 @@
 #include "estado.h"
 #include "stack.h"
 
-//Inserir elementos no inicio
+/**
+ * @brief Adiciona o estado atual do jogo à stack.
+ * @param e estado atual do jogo
+ */
 void push(ESTADO e)
 {
   struct Node* temp;
@@ -17,20 +20,28 @@ void push(ESTADO e)
   top = temp;
 }
 
-//Verificar se a stack esta vazia
+/**
+ * @brief Verifica se a stack está vazia.
+ * @return booleano
+ */
 int isEmpty()
 {
   return top == NULL;
 }
 
-//Indicar o elemento do topo da stack
+/**
+ * @brief Indica o último estado adicionado à stack.
+ * @return último estado adicionado à stack.
+ */
 ESTADO peek()
 {
   if (!isEmpty(top))
     return top->estado;
 }
 
-//Remover o elemento no topo da stack
+/**
+ * @brief Remove o último estado adicionado à stack;
+ */
 void pop()
 {
   struct Node* temp;
@@ -42,11 +53,19 @@ void pop()
   }
 }
 
+/**
+ * @brief Inicializa uma stack vazia.
+ */
 void clean()
 {
   top = NULL;
 }
 
+/**
+ * @brief Devolve o estado do jogo anterior ao atual, acrescenta-o à stack e imprime-o.
+ * @param e estado atual do jogo
+ * @return estado do jogo anterior ao atual
+ */
 ESTADO do_undo(ESTADO e)
 {
   pop();

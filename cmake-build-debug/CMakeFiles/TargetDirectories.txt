@@ -1,0 +1,3 @@
+/home/sara/li2/Reversi/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/sara/li2/Reversi/cmake-build-debug/CMakeFiles/proj.dir
+/home/sara/li2/Reversi/cmake-build-debug/CMakeFiles/edit_cache.dir

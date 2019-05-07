@@ -5,7 +5,13 @@
 #include "stack.h"
 #include "bot.h"
 
-//função que verifica as posições onde é possível jogar
+/**
+ * @brief Verifica as posições onde o jogador atual pode jogar.
+ * @param e estado atual do jogo
+ * @param line linha da posição a verificar
+ * @param column coluna da posição a verificar
+ * @return retorna VALOR POSSIBLE se o jogador puder jogar na posição recebida
+ */
 VALOR pecas(ESTADO e, int line, int column)
 {
   int i,j,t=0;
@@ -165,9 +171,12 @@ VALOR pecas(ESTADO e, int line, int column)
     }
   }
 }
-// variável global -> lista de posições possíveis
-char* string[MAX];
-//função que dá a lista de posições onde o jogador atual pode jogar
+
+/**
+ * @brief Dá a lista de posições onde o jogador atual pode jogar.
+ * @param e estado atual do jogo
+ * @return comprimento da lista das posições possíveis
+ */
 int listAS(ESTADO e)
 {
   int c = 0; int i,j;
@@ -186,7 +195,12 @@ int listAS(ESTADO e)
   return c;
 }
 
-// função que imprime estado do jogo
+/**
+ * @brief Imprime o estado atual do jogo: tabuleiro, próximo jogador a jogar e as pontuações dos jogadores.
+ * @param e estado atual do jogo
+ * @param m variável que determina se foi executado o comando 'S'
+ * @param n variável que determina se foi executado o comando 'H'
+ */
 void printa(ESTADO e, int m, int n)
 {
   char c = ' '; int i,j, p = 0;
@@ -214,8 +228,12 @@ void printa(ESTADO e, int m, int n)
   printf("\n");
 }
 
-//funcao que guarda estado em ficheiro
-void printE(ESTADO e, char* cmd2) // FALTA NÍVEL DO BOT
+/**
+ * @brief Imprime num ficheiro o estado atual do jogo.
+ * @param e estado atual do jogo
+ * @param cmd2 nome do ficheiro escolhido pelo utilizador
+ */
+void printE(ESTADO e, char* cmd2)
 {
     char c = ' '; int i,j;
     FILE *tab;
@@ -226,8 +244,12 @@ void printE(ESTADO e, char* cmd2) // FALTA NÍVEL DO BOT
 
     if(e.peca == VALOR_O && e.modo == '0') fprintf(tab,"O\n");
     else if(e.peca == VALOR_X && e.modo == '0') fprintf(tab,"X\n");
-    else if(e.peca == VALOR_O && e.modo == '1') fprintf(tab,"O 2\n");
-    else fprintf(tab,"X 2\n");
+    else if(e.peca == VALOR_O && e.modo == '1') fprintf(tab,"O ");
+    else fprintf(tab,"X ");
+
+    if(e.nivel == 1) fprintf(tab,"1\n");
+    else if(e.nivel == 2) fprintf(tab,"2\n");
+    else if(e.nivel == 3) fprintf(tab,"3\n");
 
     if(e.peca == VALOR_O) printf("\nVez do jogador O\n\n");
     else printf("\nVez do jogador X\n\n");
@@ -253,7 +275,11 @@ void printE(ESTADO e, char* cmd2) // FALTA NÍVEL DO BOT
     fclose(tab);
 }
 
-//score do jogador O
+/**
+ * @brief Devolve a pontuação do jogador O.
+ * @param e estado atual do jogo
+ * @return pontuação do jogador O
+ */
 int scoreO(ESTADO e)
 {
   int conta = 0; int i,j;
@@ -262,7 +288,11 @@ int scoreO(ESTADO e)
   return conta;
 }
 
-//score do jogador X
+/**
+ * @brief Devolve a pontuação do jogador X.
+ * @param e estado atual do jogo
+ * @return pontuação do jogador X
+ */
 int scoreX(ESTADO e)
 {
   int conta = 0; int i,j;
@@ -271,7 +301,11 @@ int scoreX(ESTADO e)
   return conta;
 }
 
-//verifica se o tabuleiro está todo preenchido
+/**
+ * @brief Verifica se o tabuleiro do jogo se encontra preenchido.
+ * @param e estado atual do jogo
+ * @return valor 0 se estiver preenchido
+ */
 int cheio(ESTADO e)
 {
   int r=0; int i,j;
@@ -280,6 +314,10 @@ int cheio(ESTADO e)
   return r;
 }
 
+/**
+ * @brief Imprime uma mensagem a anunciar o vencedor do jogo atual.
+ * @param e estado atual do jogo
+ */
 void endGame (ESTADO e)
 {
   if(scoreO(e) > scoreX(e)) printf("O vencedor é o Jogador O!\n");
@@ -287,8 +325,14 @@ void endGame (ESTADO e)
   else printf("Empataram... SMH\n");
 }
 
-// atualiza as peças do tabuleiro quando é efetuada uma jogada
-ESTADO preenche(ESTADO e, int line, int column) //ERRO !!!
+/**
+ * @brief Preenche os campos do tabuleiro depois de efetuada uma jogada.
+ * @param e estado atual do jogo
+ * @param line linha da posição escolhida pelo jogador
+ * @param column coluna da posição escolhida pelo jogador
+ * @return estado atualizado com a jogada
+ */
+ESTADO preenche(ESTADO e, int line, int column)
 {
   int x = 0, y1 = 0, y2 = 0;
 
@@ -366,7 +410,6 @@ ESTADO preenche(ESTADO e, int line, int column) //ERRO !!!
     }
       else break;
     }
-    x=0;
   }
   else {
     e.grelha[line][column] = VALOR_X;
@@ -446,39 +489,89 @@ ESTADO preenche(ESTADO e, int line, int column) //ERRO !!!
   return e;
 }
 
-//função que lê a jogada e verifica se é válida
+/**
+ * @brief Lê a jogada do jogador atual: verifica se é válida e se há situação de fim de jogo.
+ * @param e estado atual do jogo
+ * @param line linha da posição escolhida pelo jogador
+ * @param column coluna da posição escolhida pelo jogador
+ * @return estado atualizado com a jogada
+ */
 ESTADO jogada(ESTADO e, int line, int column)
 {
+  char c; variavel = 0;
   line--; column--;
 
-  if(listAS(e) > 0) {
-    if(pecas(e,line,column) == POSSIBLE && line<8 && column<8) {
+  if(listAS(e) > 0)
+  {
+    if(pecas(e,line,column) == POSSIBLE && line<8 && column<8)
+    {
       tpm=0;
       e = preenche(e,line,column);
       if(e.peca == VALOR_O) {e.peca = VALOR_X;}
       else {e.peca = VALOR_O;}
       push(e);
       printa(e,1,1);
-      if (e.modo == '1') botN2(e);
+      if(e.peca == VALOR_O) c = 'O';
+      else c = 'X';
+      if(listAS(e) == 0)
+      {
+        variavel = 1;
+        printf("Não existem jogadas válidas para o jogador %c\n",c);
+        if(e.peca == VALOR_O) e.peca = VALOR_X;
+        else e.peca = VALOR_O;
+        if(e.modo == '0') printa(e,1,1);
+      }
+      if (e.modo == '1' && e.nivel == 1)
+      {
+        if(variavel == 1) {
+          if(e.peca == VALOR_O) e.peca = VALOR_X;
+          else e.peca = VALOR_O;
+        }
+        botN1(e);
+      }
+      else if (e.modo == '1' && e.nivel == 2)
+      {
+        if(variavel == 1) {
+          if(e.peca == VALOR_O) e.peca = VALOR_X;
+          else e.peca = VALOR_O;
+        }
+        botN2(e);
+      }
     }
     else {
       printf("Jogada inválida.\n");
       printa(e,1,1);
     }
   }
-  else {
+  else
+  {
+    if(e.peca == VALOR_O) c = 'O';
+    else c = 'X';
+    printf("Não existem jogadas válidas para o jogador %c\n",c);
     tpm++;
     if(e.peca == VALOR_O) e.peca = VALOR_X;
     else e.peca = VALOR_O;
     if (tpm > 1) endGame(e);
-    printa(e,1,1);
+    else printa(e,1,1);
   }
-  
+
   if(cheio(e) == 0) endGame(e);
+  if(scoreO(e) == 0 || scoreX(e) == 0)
+  {
+    if(scoreO(e) == 0) printf("Não existem jogadas válidas para o jogador O\n");
+    else if(scoreX(e) == 0) printf("Não existem jogadas válidas para o jogador X\n");
+    endGame(e);
+  }
   interpretador(e);
   return e;
 }
 
+/**
+ * @brief Lê um ficheiro de jogo e substitui o jogo atual pelo lido no ficheiro
+ * @param e estado atual do jogo
+ * @param cmd2 nome do ficheiro escolhido pelo utilizador
+ * @return estado substituído pelo estado do jogo no ficheiro
+ */
 ESTADO leFicheiro(ESTADO e,char *cmd2)
 {
   char mode,peca,level; int c,i=0,j=0;
@@ -487,11 +580,15 @@ ESTADO leFicheiro(ESTADO e,char *cmd2)
 
   fscanf(file,"%c %c %c",&mode,&peca,&level);
 
-  if(mode == 'M') e.modo = '0';
-  else e.modo = '1';
+  if(mode == 'M') {e.modo = '0'; printf("\nModo de Jogo Manual\n");}
+  else {e.modo = '1';printf("\nModo de Jogo Automático\nBot de nível %c\n",level);}
 
   if(peca == 'O') e.peca = VALOR_O;
   else e.peca = VALOR_X;
+
+  if(level == '1') e.nivel = 1;
+  else if(level == '2') e.nivel = 2;
+  else if(level == '3') e.nivel = 3;
 
   printf("\nVez do Jogador %c\n\n",peca);
 
@@ -501,14 +598,14 @@ ESTADO leFicheiro(ESTADO e,char *cmd2)
   printf("  1 2 3 4 5 6 7 8\n");
   printf("1 ");
   while((c = fgetc(file)) != EOF) {
-        if(c == 'X') {e.grelha[i][j] = VALOR_X; j++; printf("%c ",c);}
-        else if(c == 'O') {e.grelha[i][j] = VALOR_O; j++; printf("%c ",c);}
-        else if(c == '-') {e.grelha[i][j] = VAZIA; j++; printf("%c ",c);}
-        else if(c == '\n') {
-          i++;
-          if(i<8) printf("\n%d ",i+1);
-          j=0;
-        }
+      if(c == 'X') {e.grelha[i][j] = VALOR_X; j++; printf("%c ",c);}
+      else if(c == 'O') {e.grelha[i][j] = VALOR_O; j++; printf("%c ",c);}
+      else if(c == '-') {e.grelha[i][j] = VAZIA; j++; printf("%c ",c);}
+      else if(c == '\n') {
+        i++;
+        if(i<8) printf("\n%d ",i+1);
+        j=0;
+      }
   }
   printf("\n\n");
   printf("Score O: %d\n", scoreO(e));
