@@ -9,7 +9,7 @@
 ESTADO e = {0};
 
 /**
- * @brief Inicializa tabuleiro
+ * @brief Inicializa tabuleiro.
  * @param e estado atual do jogo
  * @return ESTADO inicializado
  */

@@ -514,7 +514,7 @@ ESTADO jogada(ESTADO e, int line, int column, int* var)
       if(cheio(e) == 0) {endGame(e); *var= 1; return e;}
       if(e.peca == VALOR_O) c = 'O';
       else c = 'X';
-      if(listAS(e) == 0) 
+      if(listAS(e) == 0)
       {
         variavel = 1;
         printf("Não existem jogadas válidas para o jogador %c\n",c);
