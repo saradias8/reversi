@@ -30,7 +30,7 @@ int listAS(ESTADO);
 void printa(ESTADO,int,int);
 void printE(ESTADO,char*);
 ESTADO preenche(ESTADO,int,int);
-ESTADO jogada(ESTADO,int,int);
+ESTADO jogada(ESTADO,int,int,int*);
 ESTADO leFicheiro(ESTADO,char*);
 void interpretador(ESTADO);
 VALOR pecas(ESTADO,int,int);

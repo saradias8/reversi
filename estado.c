@@ -19,15 +19,15 @@ VALOR pecas(ESTADO e, int line, int column)
 
   if(e.grelha[line][column] == VAZIA) {
 
-    if(e.peca == VALOR_O) { // jogador O
-      //linha direita
+    if(e.peca == VALOR_O) {
+
       for (j = column+1; j < 8; j++) {
         if(e.grelha[line][j] == VALOR_X) t++;
         else if(e.grelha[line][j] == VALOR_O && t>0) {r = POSSIBLE; break;}
         else break;
       }
       t=0;
-      //linha esquerda
+
       for (j = column-1; j >= 0; j--) {
         if(r==POSSIBLE) break;
         else {
@@ -37,7 +37,7 @@ VALOR pecas(ESTADO e, int line, int column)
         }
       }
       t=0;
-      //coluna baixo
+
       for (i = line+1; i < 8; i++) {
         if(r==POSSIBLE) break;
         else {
@@ -47,7 +47,7 @@ VALOR pecas(ESTADO e, int line, int column)
         }
       }
       t=0;
-      //coluna cima
+
       for (i = line-1; i >= 0; i--) {
         if(r==POSSIBLE) break;
         else {
@@ -57,7 +57,7 @@ VALOR pecas(ESTADO e, int line, int column)
         }
       }
       t=0;
-      //diagonal inferior direita
+
       for (i = line+1, j = column+1; i < 8, j < 8; i++, j++) {
         if(r==POSSIBLE) break;
         else {
@@ -67,7 +67,7 @@ VALOR pecas(ESTADO e, int line, int column)
         }
       }
       t=0;
-      //diagonal superior esquerda
+
       for (i = line-1, j = column-1; i >= 0, j >= 0; i--, j--) {
         if(r==POSSIBLE) break;
         else {
@@ -86,7 +86,7 @@ VALOR pecas(ESTADO e, int line, int column)
         }
       }
       t=0;
-      //diagonal superior direita
+
       for (i = line-1, j = column+1; i >= 0, j < 8; i--, j++) {
         if(r==POSSIBLE) break;
         else {
@@ -97,7 +97,7 @@ VALOR pecas(ESTADO e, int line, int column)
       }
       return r;
     }
-    else { // jogador X
+    else {
 
       for (j = column+1; j < 8; j++) {
         if(e.grelha[line][j] == VALOR_O) t++;
@@ -496,7 +496,7 @@ ESTADO preenche(ESTADO e, int line, int column)
  * @param column coluna da posição escolhida pelo jogador
  * @return estado atualizado com a jogada
  */
-ESTADO jogada(ESTADO e, int line, int column)
+ESTADO jogada(ESTADO e, int line, int column, int* var)
 {
   char c; variavel = 0;
   line--; column--;
@@ -511,9 +511,10 @@ ESTADO jogada(ESTADO e, int line, int column)
       else {e.peca = VALOR_O;}
       push(e);
       printa(e,1,1);
+      if(cheio(e) == 0) {endGame(e); *var= 1; return e;}
       if(e.peca == VALOR_O) c = 'O';
       else c = 'X';
-      if(listAS(e) == 0)
+      if(listAS(e) == 0) 
       {
         variavel = 1;
         printf("Não existem jogadas válidas para o jogador %c\n",c);
@@ -551,16 +552,16 @@ ESTADO jogada(ESTADO e, int line, int column)
     tpm++;
     if(e.peca == VALOR_O) e.peca = VALOR_X;
     else e.peca = VALOR_O;
-    if (tpm > 1) endGame(e);
+    if (tpm > 1) {endGame(e); *var= 1;}
     else printa(e,1,1);
   }
 
-  if(cheio(e) == 0) endGame(e);
+  if(cheio(e) == 0) {endGame(e); *var= 1;}
   if(scoreO(e) == 0 || scoreX(e) == 0)
   {
     if(scoreO(e) == 0) printf("Não existem jogadas válidas para o jogador O\n");
     else if(scoreX(e) == 0) printf("Não existem jogadas válidas para o jogador X\n");
-    endGame(e);
+    endGame(e); *var= 1;
   }
   interpretador(e);
   return e;
@@ -581,7 +582,7 @@ ESTADO leFicheiro(ESTADO e,char *cmd2)
   fscanf(file,"%c %c %c",&mode,&peca,&level);
 
   if(mode == 'M') {e.modo = '0'; printf("\nModo de Jogo Manual\n");}
-  else {e.modo = '1';printf("\nModo de Jogo Automático\nBot de nível %c\n",level);}
+  else {e.modo = '1';printf("\nModo de Jogo Automático\nNível do bot: %c\n",level);}
 
   if(peca == 'O') e.peca = VALOR_O;
   else e.peca = VALOR_X;

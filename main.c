@@ -104,10 +104,10 @@ ESTADO commands(ESTADO e,char linha[])
       break;
 
     case 'J':
-      if(listAS(e) == 0) jogada(e,0,0);
+      if(listAS(e) == 0) jogada(e,0,0,&var);
       else if(cmd2 && cmd3) {
           a = atoi(cmd2); b = atoi(cmd3);
-          if(var==0) jogada(e,a,b);
+          if(var==0) jogada(e,a,b,&var);
       }
       else {
         printf("Comando inválido\n\n");
@@ -222,7 +222,6 @@ void menu()
  */
 int main()
 {
-  //estado inicial
   e = iniciaE(e);
 
   menu();
