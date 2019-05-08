@@ -604,42 +604,45 @@ ESTADO leFicheiro(ESTADO e,char *cmd2,int* var) // se ficheiro não existir, nã
   FILE *file;
   file = fopen(cmd2,"r+");
 
-  fscanf(file,"%c %c %c",&mode,&peca,&level);
-
-  if(mode == 'M') {e.modo = '0'; printf("\nModo de Jogo Manual\n");}
-  else {e.modo = '1';printf("\nModo de Jogo Automático\nNível do bot: %c\n",level);}
-
-  if(peca == 'O') e.peca = VALOR_O;
-  else e.peca = VALOR_X;
-
-  if(level == '1') e.nivel = 1;
-  else if(level == '2') e.nivel = 2;
-  else if(level == '3') e.nivel = 3;
-
-  printf("\nVez do Jogador %c\n\n",peca);
-
-  if(e.modo == '0') fseek(file,4,SEEK_SET);
-  else fseek(file,6,SEEK_SET);
-
-  printf("  1 2 3 4 5 6 7 8\n");
-  printf("1 ");
-  while((c = fgetc(file)) != EOF) {
-      if(c == 'X') {e.grelha[i][j] = VALOR_X; j++; printf("%c ",c);}
-      else if(c == 'O') {e.grelha[i][j] = VALOR_O; j++; printf("%c ",c);}
-      else if(c == '-') {e.grelha[i][j] = VAZIA; j++; printf("%c ",c);}
-      else if(c == '\n') {
-        i++;
-        if(i<8) printf("\n%d ",i+1);
-        j=0;
-      }
-  }
-  printf("\n\n");
-  printf("Score O: %d\n", scoreO(e));
-  printf("Score X: %d\n", scoreX(e));
-  printf("\n");
-
-  fclose(file);
-  if(fimJogo(e,var)==0) *var = 1;
+  if(file == NULL) printf("Não existe nenhum ficheiro de jogo com o nome inserido.\n");
   
+  else {
+    fscanf(file,"%c %c %c",&mode,&peca,&level);
+
+    if(mode == 'M') {e.modo = '0'; printf("\nModo de Jogo Manual\n");}
+    else {e.modo = '1';printf("\nModo de Jogo Automático\nNível do bot: %c\n",level);}
+
+    if(peca == 'O') e.peca = VALOR_O;
+    else e.peca = VALOR_X;
+
+    if(level == '1') e.nivel = 1;
+    else if(level == '2') e.nivel = 2;
+    else if(level == '3') e.nivel = 3;
+
+    printf("\nVez do Jogador %c\n\n",peca);
+
+    if(e.modo == '0') fseek(file,4,SEEK_SET);
+    else fseek(file,6,SEEK_SET);
+
+    printf("  1 2 3 4 5 6 7 8\n");
+    printf("1 ");
+    while((c = fgetc(file)) != EOF) {
+        if(c == 'X') {e.grelha[i][j] = VALOR_X; j++; printf("%c ",c);}
+        else if(c == 'O') {e.grelha[i][j] = VALOR_O; j++; printf("%c ",c);}
+        else if(c == '-') {e.grelha[i][j] = VAZIA; j++; printf("%c ",c);}
+        else if(c == '\n') {
+          i++;
+          if(i<8) printf("\n%d ",i+1);
+          j=0;
+        }
+    }
+    printf("\n\n");
+    printf("Score O: %d\n", scoreO(e));
+    printf("Score X: %d\n", scoreX(e));
+    printf("\n");
+
+    fclose(file);
+    if(fimJogo(e,var)==0) *var = 1;
+  }
   return e;
 }
