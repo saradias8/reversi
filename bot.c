@@ -30,15 +30,10 @@ ESTADO jogadabot(ESTADO e, int line, int column)
   }
   else
   {
-    tpm++;
     if(e.peca == VALOR_O) e.peca = VALOR_X;
     else e.peca = VALOR_O;
-    if (tpm > 1) endGame(e);
   }
   printa(e,1,1);
-
-  if(cheio(e) == 0) endGame(e);
-  if(scoreO(e) == 0 || scoreX(e) == 0) endGame(e);
 
   interpretador(e);
   return e;
@@ -57,7 +52,9 @@ void botN1(ESTADO e)
     for(j=0;j<8;j++)
       if(pecas(e,i,j) == POSSIBLE) {a[k] = i*10 + j; k++;}
 
-  n = rand() % (k-1);
+  if(k>1) n = rand() % (k-1);
+  else n = 0;
+  
   j = a[n] % 10;
   i = (a[n] - j) / 10;
 

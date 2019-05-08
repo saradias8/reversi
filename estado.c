@@ -58,7 +58,7 @@ VALOR pecas(ESTADO e, int line, int column)
       }
       t=0;
 
-      for (i = line+1, j = column+1; i < 8, j < 8; i++, j++) {
+      for (i = line+1, j = column+1; i < 8 && j < 8; i++, j++) {
         if(r==POSSIBLE) break;
         else {
           if(e.grelha[i][j] == VALOR_X) t++;
@@ -68,7 +68,7 @@ VALOR pecas(ESTADO e, int line, int column)
       }
       t=0;
 
-      for (i = line-1, j = column-1; i >= 0, j >= 0; i--, j--) {
+      for (i = line-1, j = column-1; i >= 0 && j >= 0; i--, j--) {
         if(r==POSSIBLE) break;
         else {
           if(e.grelha[i][j] == VALOR_X) t++;
@@ -77,7 +77,7 @@ VALOR pecas(ESTADO e, int line, int column)
         }
       }
       t=0;
-      for (i = line+1, j = column-1; i < 8, j >= 0; i++, j--) {
+      for (i = line+1, j = column-1; i < 8 && j >= 0; i++, j--) {
         if(r==POSSIBLE) break;
         else {
           if(e.grelha[i][j] == VALOR_X) t++;
@@ -87,7 +87,7 @@ VALOR pecas(ESTADO e, int line, int column)
       }
       t=0;
 
-      for (i = line-1, j = column+1; i >= 0, j < 8; i--, j++) {
+      for (i = line-1, j = column+1; i >= 0 && j < 8; i--, j++) {
         if(r==POSSIBLE) break;
         else {
           if(e.grelha[i][j] == VALOR_X) t++;
@@ -132,7 +132,7 @@ VALOR pecas(ESTADO e, int line, int column)
         }
       }
       t=0;
-      for (i = line+1, j = column+1; i < 8, j < 8; i++, j++) {
+      for (i = line+1, j = column+1; i < 8 && j < 8; i++, j++) {
         if(r==POSSIBLE) break;
         else {
           if(e.grelha[i][j] == VALOR_O) t++;
@@ -141,7 +141,7 @@ VALOR pecas(ESTADO e, int line, int column)
         }
       }
       t=0;
-      for (i = line-1, j = column-1; i >= 0, j >= 0; i--, j--) {
+      for (i = line-1, j = column-1; i >= 0 && j >= 0; i--, j--) {
         if(r==POSSIBLE) break;
         else {
           if(e.grelha[i][j] == VALOR_O) t++;
@@ -150,7 +150,7 @@ VALOR pecas(ESTADO e, int line, int column)
         }
       }
       t=0;
-      for (i = line+1, j = column-1; i < 8, j >= 0; i++, j--) {
+      for (i = line+1, j = column-1; i < 8 && j >= 0; i++, j--) {
         if(r==POSSIBLE) break;
         else {
           if(e.grelha[i][j] == VALOR_O) t++;
@@ -159,7 +159,7 @@ VALOR pecas(ESTADO e, int line, int column)
         }
       }
       t=0;
-      for (i = line-1, j = column+1; i >= 0, j < 8; i--, j++) {
+      for (i = line-1, j = column+1; i >= 0 && j < 8; i--, j++) {
         if(r==POSSIBLE) break;
         else {
           if(e.grelha[i][j] == VALOR_O) t++;
@@ -375,7 +375,7 @@ ESTADO preenche(ESTADO e, int line, int column)
       else break;
     }
     x=0;
-    for (i = line+1, j = column+1; i < 8, j < 8; i++, j++) {
+    for (i = line+1, j = column+1; i < 8 && j < 8; i++, j++) {
       if(e.grelha[i][j] == VALOR_X) x++;
       else if (e.grelha[i][j] == VALOR_O && x>0) {
         for (y1 = (i-1), y2 = (j-1); y1>line, y2>column; y1--, y2--) e.grelha[y1][y2] = VALOR_O;
@@ -384,7 +384,7 @@ ESTADO preenche(ESTADO e, int line, int column)
       else break;
     }
     x=0;
-    for (i = line-1, j = column-1; i >= 0, j >= 0; i--, j--) {
+    for (i = line-1, j = column-1; i >= 0 && j >= 0; i--, j--) {
       if(e.grelha[i][j] == VALOR_X) x++;
       else if (e.grelha[i][j] == VALOR_O && x>0) {
         for (y1 = (i+1), y2 = (j+1); y1<line, y2<column; y1++, y2++) e.grelha[y1][y2] = VALOR_O;
@@ -393,7 +393,7 @@ ESTADO preenche(ESTADO e, int line, int column)
       else break;
     }
     x=0;
-    for (i = line+1, j = column-1; i < 8, j >= 0; i++, j--) {
+    for (i = line+1, j = column-1; i < 8 && j >= 0; i++, j--) {
       if(e.grelha[i][j] == VALOR_X) x++;
       else if (e.grelha[i][j] == VALOR_O && x>0) {
         for (y1 = (i-1), y2 = (j+1); y1>line, y2<column; y1--, y2++) e.grelha[y1][y2] = VALOR_O;
@@ -402,7 +402,7 @@ ESTADO preenche(ESTADO e, int line, int column)
       else break;
     }
     x=0;
-    for (i = line-1, j = column+1; i >= 0, j < 8; i--, j++) {
+    for (i = line-1, j = column+1; i >= 0 && j < 8; i--, j++) {
       if(e.grelha[i][j] == VALOR_X) x++;
       else if (e.grelha[i][j] == VALOR_O && x>0) {
         for (y1 = (i+1), y2 = (j-1); y1<line, y2>column; y1++, y2--) e.grelha[y1][y2] = VALOR_O;
@@ -450,7 +450,7 @@ ESTADO preenche(ESTADO e, int line, int column)
       else break;
     }
     x=0;
-    for (i = line+1, j = column+1; i < 8, j < 8; i++, j++) {
+    for (i = line+1, j = column+1; i < 8 && j < 8; i++, j++) {
       if(e.grelha[i][j] == VALOR_O) x++;
       else if (e.grelha[i][j] == VALOR_X && x>0) {
         for (y1 = (i-1), y2 = (j-1); y1>line, y2>column; y1--, y2--) e.grelha[y1][y2] = VALOR_X;
@@ -459,7 +459,7 @@ ESTADO preenche(ESTADO e, int line, int column)
       else break;
     }
     x=0;
-    for (i = line-1, j = column-1; i >= 0, j >= 0; i--, j--) {
+    for (i = line-1, j = column-1; i >= 0 && j >= 0; i--, j--) {
       if(e.grelha[i][j] == VALOR_O) x++;
       else if (e.grelha[i][j] == VALOR_X && x>0) {
         for (y1 = (i+1), y2 = (j+1); y1<line, y2<column; y1++, y2++) e.grelha[y1][y2] = VALOR_X;
@@ -468,7 +468,7 @@ ESTADO preenche(ESTADO e, int line, int column)
       else break;
     }
     x=0;
-    for (i = line+1, j = column-1; i < 8, j >= 0; i++, j--) {
+    for (i = line+1, j = column-1; i < 8 && j >= 0; i++, j--) {
       if(e.grelha[i][j] == VALOR_O) x++;
       else if (e.grelha[i][j] == VALOR_X && x>0) {
         for (y1 = (i-1), y2 = (j+1); y1>line, y2<column; y1--, y2++) e.grelha[y1][y2] = VALOR_X;
@@ -477,7 +477,7 @@ ESTADO preenche(ESTADO e, int line, int column)
       else break;
     }
     x=0;
-    for (i = line-1, j = column+1; i >= 0, j < 8; i--, j++) {
+    for (i = line-1, j = column+1; i >= 0 && j < 8; i--, j++) {
       if(e.grelha[i][j] == VALOR_O) x++;
       else if (e.grelha[i][j] == VALOR_X && x>0) {
         for (y1 = (i+1), y2 = (j-1); y1<line, y2>column; y1++, y2--) e.grelha[y1][y2] = VALOR_X;
@@ -487,6 +487,38 @@ ESTADO preenche(ESTADO e, int line, int column)
     }
   }
   return e;
+}
+
+int fimJogo(ESTADO e, int *var)
+{
+  char c; int r = 1;
+
+  if(cheio(e) == 0) {
+      endGame(e);
+      *var= 1;
+  }
+  else if(scoreO(e) == 0 || scoreX(e) == 0){
+      if(scoreO(e) == 0) printf("Não existem jogadas válidas para o jogador O\n");
+      else if(scoreX(e) == 0) printf("Não existem jogadas válidas para o jogador X\n");
+      endGame(e); r = 0;
+  }
+  else if(listAS(e) == 0) {
+      if(e.peca == VALOR_O) c = 'O';
+      else c = 'X';
+      printf("Não existem jogadas válidas para o jogador %c\n",c);
+
+      if(e.peca == VALOR_O) e.peca = VALOR_X;
+      else e.peca = VALOR_O;
+
+      if(listAS(e) == 0) {
+        if(e.peca == VALOR_O) c = 'O';
+        else c = 'X';
+        printf("Não existem jogadas válidas para o jogador %c\n",c);
+        endGame(e); r = 0;
+      }
+      else r = 1;
+  }
+  return r;
 }
 
 /**
@@ -507,13 +539,14 @@ ESTADO jogada(ESTADO e, int line, int column, int* var)
     {
       tpm=0;
       e = preenche(e,line,column);
-      if(e.peca == VALOR_O) {e.peca = VALOR_X;}
-      else {e.peca = VALOR_O;}
+      if(e.peca == VALOR_O) e.peca = VALOR_X;
+      else e.peca = VALOR_O;
       push(e);
       printa(e,1,1);
-      if(cheio(e) == 0) {endGame(e); *var= 1; return e;}
+      if(cheio(e) == 0) {endGame(e); *var = 1; return e;}
       if(e.peca == VALOR_O) c = 'O';
       else c = 'X';
+
       if(listAS(e) == 0)
       {
         variavel = 1;
@@ -522,9 +555,11 @@ ESTADO jogada(ESTADO e, int line, int column, int* var)
         else e.peca = VALOR_O;
         if(e.modo == '0') printa(e,1,1);
       }
+
       if (e.modo == '1' && e.nivel == 1)
       {
         if(variavel == 1) {
+          // serve para trocar a e.peca (chama o bot para verificar situação de fim de jogo)
           if(e.peca == VALOR_O) e.peca = VALOR_X;
           else e.peca = VALOR_O;
         }
@@ -549,20 +584,10 @@ ESTADO jogada(ESTADO e, int line, int column, int* var)
     if(e.peca == VALOR_O) c = 'O';
     else c = 'X';
     printf("Não existem jogadas válidas para o jogador %c\n",c);
-    tpm++;
     if(e.peca == VALOR_O) e.peca = VALOR_X;
     else e.peca = VALOR_O;
-    if (tpm > 1) {endGame(e); *var= 1;}
-    else printa(e,1,1);
   }
 
-  if(cheio(e) == 0) {endGame(e); *var= 1;}
-  if(scoreO(e) == 0 || scoreX(e) == 0)
-  {
-    if(scoreO(e) == 0) printf("Não existem jogadas válidas para o jogador O\n");
-    else if(scoreX(e) == 0) printf("Não existem jogadas válidas para o jogador X\n");
-    endGame(e); *var= 1;
-  }
   interpretador(e);
   return e;
 }
@@ -573,7 +598,7 @@ ESTADO jogada(ESTADO e, int line, int column, int* var)
  * @param cmd2 nome do ficheiro escolhido pelo utilizador
  * @return estado substituído pelo estado do jogo no ficheiro
  */
-ESTADO leFicheiro(ESTADO e,char *cmd2)
+ESTADO leFicheiro(ESTADO e,char *cmd2,int* var) // se ficheiro não existir, não dar erro!
 {
   char mode,peca,level; int c,i=0,j=0;
   FILE *file;
@@ -614,5 +639,7 @@ ESTADO leFicheiro(ESTADO e,char *cmd2)
   printf("\n");
 
   fclose(file);
+  if(fimJogo(e,var)==0) *var = 1;
+  
   return e;
 }

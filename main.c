@@ -31,10 +31,10 @@ ESTADO iniciaE(ESTADO e)
  * @param linha input do utilizador
  * @return ESTADO depois de comando executado
  */
-ESTADO commands(ESTADO e,char linha[])
+ESTADO commands(ESTADO e,char linha[],int* var)
 {
   char *cmd1, *cmd2, *cmd3;
-  int i=0; int a,b;
+  int i=0,a,b;
 
   cmd1 = strtok(linha," ");
   cmd2 = strtok(NULL," ");
@@ -46,18 +46,16 @@ ESTADO commands(ESTADO e,char linha[])
   if(cmd2 && cmd3 == NULL) cmd2[strlen(cmd2)-1] = '\0';
 
   switch (*cmd1) {
-
     case 'N':
       if(cmd2) {
         while(cmd2[i]) {cmd2[i] = toupper(cmd2[i]); i++;}
-
         e = iniciaE(e);
 
         if(*cmd2 == 'O') {
             e.modo = '0';
             e.nivel = 0;
             clean();
-            var = 0;
+            *var = 0;
             e.peca = VALOR_O;
             printa(e,1,1);
             push(e);
@@ -66,65 +64,65 @@ ESTADO commands(ESTADO e,char linha[])
             e.modo = '0';
             e.nivel = 0;
             clean();
-            var = 0;
+            *var = 0;
             e.peca = VALOR_X;
             printa(e,1,1);
             push(e);
         }
         else {
-          printf("Comando inválido\n\n");
-          var = 1;
+          printf("Comando inválido\n");
+          *var = 1;
         }
       }
       else {
-        printf("Comando inválido\n\n");
-        var = 1;
+        printf("Comando inválido\n");
+        *var = 1;
       }
       break;
 
     case 'L':
       if(cmd2){
         clean();
-        e = leFicheiro(e,cmd2);
-        var = 0;
+        e = leFicheiro(e,cmd2,var);
+        *var = 0;
       }
-      else {
-        printf("Comando inválido\n\n");
-        var = 1;
-      }
+      else printf("Comando inválido\n");
       break;
 
     case 'E':
       if(cmd2) {
-        if(var==0) printE(e,cmd2); }
-        else {
-          printf("Comando inválido\n\n");
-          var = 1;
-        }
+        if(*var==0) printE(e,cmd2);
+        else printf("É necessário iniciar um jogo primeiro.\n");
+      }
+      else {
+          printf("Comando inválido\n");
+          *var = 1;
+      }
       break;
 
     case 'J':
-      if(listAS(e) == 0) jogada(e,0,0,&var);
-      else if(cmd2 && cmd3) {
+      if(*var==0) if(listAS(e) == 0) jogada(e,0,0,var);
+      if(cmd2 && cmd3) {
           a = atoi(cmd2); b = atoi(cmd3);
-          if(var==0) jogada(e,a,b,&var);
+          if(*var==0) jogada(e,a,b,var);
+          else printf("É necessário iniciar um jogo primeiro.\n");
       }
-      else {
-        printf("Comando inválido\n\n");
-        var = 1;
-      }
+      else printf("Comando inválido\n");
       break;
 
     case 'S':
-      if(var==0) printa(e,0,1);
+      if(*var==0) printa(e,0,1);
+      else printf("É necessário iniciar um jogo primeiro.\n");
       break;
 
     case 'H':
-      if(var==0) printa(e,1,0);
+      if(*var==0) printa(e,1,0);
+      else printf("É necessário iniciar um jogo primeiro.\n");
       break;
 
     case 'U':
-      if(var==0) e = do_undo(e);
+      if(*var==0) e = do_undo(e);
+      else printf("É necessário iniciar um jogo primeiro.\n");
       break;
 
     case 'A':
@@ -143,20 +141,20 @@ ESTADO commands(ESTADO e,char linha[])
 
         if(*cmd3 == '2' && e.peca == VALOR_X) {
           printa(e,1,1); push(e);
-          var = 0;
+          *var = 0;
           e.nivel = 2;
           e.modo = '1';
           botN2(e);
          }
         else if(*cmd3 == '2' && e.peca == VALOR_O) {
-          var = 0;
+          *var = 0;
           e.nivel = 2;
           e.peca = VALOR_X;
           e.modo = '1';
           printa(e,1,1);
         }
         else if(*cmd3 == '1' && e.peca == VALOR_O) {
-          var = 0;
+          *var = 0;
           e.nivel = 1;
           e.peca = VALOR_X;
           e.modo = '1';
@@ -164,22 +162,23 @@ ESTADO commands(ESTADO e,char linha[])
         }
         else if(*cmd3 == '1' && e.peca == VALOR_X) {
           printa(e,1,1); push(e);
-          var = 0;
+          *var = 0;
           e.nivel = 1;
           e.modo = '1';
           botN1(e);
           }
       } else {
-        printf("Comando inválido\n\n");
-        var = 1;
+        printf("Comando inválido\n");
+        *var = 1;
       }
       break;
 
     case 'Q':
+      printf("Até à próxima!\n");
       exit(0);
 
     default:
-      printf("Comando inválido\n\n");
+      printf("Comando inválido\n");
       break;
   }
   return e;
@@ -193,9 +192,11 @@ void interpretador(ESTADO e)
 {
   char linha[MAX];
 
+  if(fimJogo(e,&var)==0) var = 1;
+
   printf("Reversi > ");
   while(fgets(linha,MAX,stdin)){
-    e = commands(e,linha);
+    e = commands(e,linha,&var);
     printf("Reversi > ");
   }
 }

@@ -20,10 +20,8 @@ typedef struct estado {
     int nivel; // nivel do bot
 } ESTADO;
 
-static int var = 1;
-int i, l, j;
-static int tpm=0;
-static int variavel = 0;
+static int var=1, tpm=0, variavel=0;
+int i,l,j;
 char* string[MAX];
 
 int listAS(ESTADO);
@@ -31,12 +29,13 @@ void printa(ESTADO,int,int);
 void printE(ESTADO,char*);
 ESTADO preenche(ESTADO,int,int);
 ESTADO jogada(ESTADO,int,int,int*);
-ESTADO leFicheiro(ESTADO,char*);
+ESTADO leFicheiro(ESTADO,char*,int*);
 void interpretador(ESTADO);
 VALOR pecas(ESTADO,int,int);
 int scoreO(ESTADO);
 int scoreX(ESTADO);
 int cheio(ESTADO);
 void endGame(ESTADO);
+int fimJogo(ESTADO,int*);
 
 #endif //PROJ_ESTADO_H
