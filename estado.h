@@ -20,7 +20,7 @@ typedef struct estado {
     int nivel; // nivel do bot
 } ESTADO;
 
-static int var=1, tpm=0, variavel=0;
+static int var=1, tpm=0, variavel=0, com=0;
 int i,l,j;
 char* string[MAX];
 

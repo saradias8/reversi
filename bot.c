@@ -11,7 +11,7 @@
  * @param column coluna da posição recebida pelo bot
  * @return estado atualizado com a jogada do bot
  */
-ESTADO jogadabot(ESTADO e, int line, int column)
+ESTADO jogadabot(ESTADO e, int line, int column, int* com)
 {
   int c;
   line--;column--;
@@ -36,9 +36,12 @@ ESTADO jogadabot(ESTADO e, int line, int column)
     if(e.peca == VALOR_O) e.peca = VALOR_X;
     else e.peca = VALOR_O;
   }
-  printa(e,1,1);
 
-  interpretador(e);
+  if(*com == 0) {
+    printa(e,1,1);
+    interpretador(e);
+  }
+
   return e;
 }
 
@@ -61,7 +64,7 @@ void botN1(ESTADO e)
   j = a[n] % 10;
   i = (a[n] - j) / 10;
 
-  jogadabot(e,i+1,j+1);
+  jogadabot(e,i+1,j+1,0);
 }
 
 /**
@@ -93,5 +96,34 @@ void botN2(ESTADO e)
                   }
             }
         }
-  jogadabot(e,l+1,c+1);
+  jogadabot(e,l+1,c+1,0);
+}
+
+ESTADO botN3(ESTADO e, int* com)
+{
+  int i, j, maior = 0, y, l, c;
+  ESTADO tmp;
+
+  for (i = 0; i < 8; i++)
+      for (j = 0; j < 8; j++)
+          if(pecas(e,i,j) == POSSIBLE)  {
+              tmp = preenche(e,i,j);
+              if (e.peca==VALOR_O) {
+                  y =scoreO(tmp) - scoreO(e);
+                  if (y>maior) {
+                    maior = y;
+                    l = i;
+                    c = j;
+                  }
+              } else if (e.peca==VALOR_X) {
+                  y =scoreX(tmp) - scoreX(e);
+                  if (y>maior) {
+                    maior = y;
+                    l = i;
+                    c = j;
+                  }
+            }
+        }
+  e = jogadabot(e,l+1,c+1,com);
+  return e;
 }

@@ -159,8 +159,8 @@ ESTADO commands(ESTADO e,char linha[],int* var)
     case 'C':
       if(cmd2){
         clean();
-        e = campeonato(e,cmd2,var);
         *var = 0;
+        e = campeonato(e,cmd2,var);
       }
       else printf("Comando inválido\n");
       break;

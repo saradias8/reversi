@@ -182,7 +182,7 @@ void printE(ESTADO e, char* cmd2)
 {
     char c = ' '; int i,j;
     FILE *tab;
-    tab = fopen(cmd2,"w");
+    tab = fopen(cmd2,"w+");
 
     if(e.modo == '0') fprintf(tab,"M ");
     else fprintf(tab,"A ");
@@ -212,10 +212,8 @@ void printE(ESTADO e, char* cmd2)
       fprintf(tab,"\n");
       printf("\n");
     }
-    printf("\n");
-    printf("Score O: %d\n", scoreO(e));
-    printf("Score X: %d\n", scoreX(e));
-    printf("\n");
+    printf("\nScore O: %d\n", scoreO(e));
+    printf("Score X: %d\n\n", scoreX(e));
 
     fclose(tab);
 }
@@ -525,22 +523,57 @@ ESTADO leFicheiro(ESTADO e,char *cmd2,int* var)
 
 ESTADO campeonato(ESTADO e,char *cmd2,int* var)
 {
-  char mode,peca,level; int c,i=0,j=0;
+  char peca,mode; int c,i=0,j=0;
   FILE *file;
   file = fopen(cmd2,"r+"); // ou "w+"?
 
-  if(file == NULL) { // começar jogo A X 3; gravar; adversário X, nós O;
-    // inicializa o jogo
-    e = iniciaE(e);
-    e.peca = VALOR_X;
-    e.modo = '1';
-    e.nivel = 3;
-    // grava em ficheiro
-    printf("\nModo de Jogo Automático\nNível do bot: 3\n");
-    printE(e,cmd2);
-  }/*
-  else { // ler tabuleiro; fazer jogada; gravar;
+  if(file == NULL) {
+      // inicializa o jogo
+      e = iniciaE(e);
+      e.peca = VALOR_X;
+      e.modo = '1';
+      e.nivel = 3;
+      // grava em ficheiro
+      printf("\nNovo campeonato\n\nModo de Jogo Automático\nNível do bot: 3\n");
+      printE(e,cmd2);
+  }
+  else {
+      e.modo = '1';
+      e.nivel = 3;
+      // lê peça
+      fscanf(file,"%c %c",&mode,&peca);
 
-  }*/
+      if(peca == 'O') e.peca = VALOR_O;
+      else e.peca = VALOR_X;
+
+      fseek(file,6,SEEK_SET);
+      // lê tabuleiro
+      printf("\nModo de Jogo Automático\nNível do bot: 3\n\nTabuleiro recebido:\n");
+      if(e.peca == VALOR_O) printf("\nVez do jogador O\n\n");
+      else printf("\nVez do jogador X\n\n");
+
+      printf("  1 2 3 4 5 6 7 8\n");
+      printf("1 ");
+      while((c = fgetc(file)) != EOF) {
+          if(c == 'X') {e.grelha[i][j] = VALOR_X; j++;printf("%c ",c);}
+          else if(c == 'O') {e.grelha[i][j] = VALOR_O; j++;printf("%c ",c);}
+          else if(c == '-') {e.grelha[i][j] = VAZIA; j++;printf("%c ",c);}
+          else if(c == '\n') {i++;if(i<8) printf("\n%d ",i+1); j=0;}
+      } printf("\n\n");
+
+      // jogada do bot
+      com = 1; // variável: case 1 bot doesnt call interpretador, logo faz printE
+      e = botN3(e,&com);
+      printf("\nTabuleiro enviado:\n");
+      printE(e,cmd2);
+      if(e.peca == VALOR_O) e.peca = VALOR_X;
+      else e.peca = VALOR_O;
+
+      if(fimJogo(e,var)==0) {
+        *var = 1;
+        //mudar o nome do ficheiro para <ficheiro>.g<pecaVencedora>
+      }
+  }
+  fclose(file);
   return e;
 }
