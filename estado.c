@@ -6,6 +6,23 @@
 #include "bot.h"
 
 /**
+ * @brief Inicializa tabuleiro.
+ * @param e estado atual do jogo
+ * @return ESTADO inicializado
+ */
+ESTADO iniciaE(ESTADO e)
+{
+  for (l = 0; l < 8; l++)
+    for (j = 0; j < 8; j++) e.grelha[l][j] = VAZIA;
+  e.grelha[3][4] = VALOR_X;
+  e.grelha[4][3] = VALOR_X;
+  e.grelha[3][3] = VALOR_O;
+  e.grelha[4][4] = VALOR_O;
+
+  return e;
+}
+
+/**
  * @brief Verifica as posições onde o jogador atual pode jogar.
  * @param e estado atual do jogo
  * @param line linha da posição a verificar
@@ -15,15 +32,16 @@
 VALOR pecas(ESTADO e, int line, int column)
 {
   int i,j,t=0;
-  VALOR r = VAZIA;
+  VALOR r=VAZIA, opponent;
+
+  if(e.peca == VALOR_O) opponent = VALOR_X;
+  else opponent = VALOR_O;
 
   if(e.grelha[line][column] == VAZIA) {
 
-    if(e.peca == VALOR_O) {
-
       for (j = column+1; j < 8; j++) {
-        if(e.grelha[line][j] == VALOR_X) t++;
-        else if(e.grelha[line][j] == VALOR_O && t>0) {r = POSSIBLE; break;}
+        if(e.grelha[line][j] == opponent) t++;
+        else if(e.grelha[line][j] == e.peca && t>0) {r = POSSIBLE; break;}
         else break;
       }
       t=0;
@@ -31,8 +49,8 @@ VALOR pecas(ESTADO e, int line, int column)
       for (j = column-1; j >= 0; j--) {
         if(r==POSSIBLE) break;
         else {
-          if(e.grelha[line][j] == VALOR_X) t++;
-          else if(e.grelha[line][j] == VALOR_O && t>0) {r = POSSIBLE; break;}
+          if(e.grelha[line][j] == opponent) t++;
+          else if(e.grelha[line][j] == e.peca && t>0) {r = POSSIBLE; break;}
           else break;
         }
       }
@@ -41,8 +59,8 @@ VALOR pecas(ESTADO e, int line, int column)
       for (i = line+1; i < 8; i++) {
         if(r==POSSIBLE) break;
         else {
-          if(e.grelha[i][column] == VALOR_X) t++;
-          else if(e.grelha[i][column] == VALOR_O && t>0) {r = POSSIBLE; break;}
+          if(e.grelha[i][column] == opponent) t++;
+          else if(e.grelha[i][column] == e.peca && t>0) {r = POSSIBLE; break;}
           else break;
         }
       }
@@ -51,8 +69,8 @@ VALOR pecas(ESTADO e, int line, int column)
       for (i = line-1; i >= 0; i--) {
         if(r==POSSIBLE) break;
         else {
-          if(e.grelha[i][column] == VALOR_X) t++;
-          else if(e.grelha[i][column] == VALOR_O && t>0) {r = POSSIBLE; break;}
+          if(e.grelha[i][column] == opponent) t++;
+          else if(e.grelha[i][column] == e.peca && t>0) {r = POSSIBLE; break;}
           else break;
         }
       }
@@ -61,8 +79,8 @@ VALOR pecas(ESTADO e, int line, int column)
       for (i = line+1, j = column+1; i < 8 && j < 8; i++, j++) {
         if(r==POSSIBLE) break;
         else {
-          if(e.grelha[i][j] == VALOR_X) t++;
-          else if(e.grelha[i][j] == VALOR_O && t>0) {r = POSSIBLE; break;}
+          if(e.grelha[i][j] == opponent) t++;
+          else if(e.grelha[i][j] == e.peca && t>0) {r = POSSIBLE; break;}
           else break;
         }
       }
@@ -71,8 +89,8 @@ VALOR pecas(ESTADO e, int line, int column)
       for (i = line-1, j = column-1; i >= 0 && j >= 0; i--, j--) {
         if(r==POSSIBLE) break;
         else {
-          if(e.grelha[i][j] == VALOR_X) t++;
-          else if(e.grelha[i][j] == VALOR_O && t>0) {r = POSSIBLE;break;}
+          if(e.grelha[i][j] == opponent) t++;
+          else if(e.grelha[i][j] == e.peca && t>0) {r = POSSIBLE;break;}
           else break;
         }
       }
@@ -80,8 +98,8 @@ VALOR pecas(ESTADO e, int line, int column)
       for (i = line+1, j = column-1; i < 8 && j >= 0; i++, j--) {
         if(r==POSSIBLE) break;
         else {
-          if(e.grelha[i][j] == VALOR_X) t++;
-          else if(e.grelha[i][j] == VALOR_O && t>0) {r = POSSIBLE; break;}
+          if(e.grelha[i][j] == opponent) t++;
+          else if(e.grelha[i][j] == e.peca && t>0) {r = POSSIBLE; break;}
           else break;
         }
       }
@@ -90,85 +108,12 @@ VALOR pecas(ESTADO e, int line, int column)
       for (i = line-1, j = column+1; i >= 0 && j < 8; i--, j++) {
         if(r==POSSIBLE) break;
         else {
-          if(e.grelha[i][j] == VALOR_X) t++;
-          else if(e.grelha[i][j] == VALOR_O && t>0) {r = POSSIBLE; break;}
-          else break;
-        }
-      }
-      return r;
-    }
-    else {
-
-      for (j = column+1; j < 8; j++) {
-        if(e.grelha[line][j] == VALOR_O) t++;
-        else if(e.grelha[line][j] == VALOR_X && t>0) {r = POSSIBLE; break;}
-        else break;
-      }
-      t=0;
-      for (j = column-1; j >= 0; j--) {
-        if(r==POSSIBLE) break;
-        else {
-          if(e.grelha[line][j] == VALOR_O) t++;
-          else if(e.grelha[line][j] == VALOR_X && t>0) {r = POSSIBLE; break;}
-          else break;
-        }
-      }
-      t=0;
-      for (i = line+1; i < 8; i++) {
-        if(r==POSSIBLE) break;
-        else {
-          if(e.grelha[i][column] == VALOR_O) t++;
-          else if(e.grelha[i][column] == VALOR_X && t>0) {r = POSSIBLE; break;}
-          else break;
-        }
-      }
-      t=0;
-      for (i = line-1; i >= 0; i--) {
-        if(r==POSSIBLE) break;
-        else {
-          if(e.grelha[i][column] == VALOR_O) t++;
-          else if(e.grelha[i][column] == VALOR_X && t>0) {r = POSSIBLE; break;}
-          else break;
-        }
-      }
-      t=0;
-      for (i = line+1, j = column+1; i < 8 && j < 8; i++, j++) {
-        if(r==POSSIBLE) break;
-        else {
-          if(e.grelha[i][j] == VALOR_O) t++;
-          else if(e.grelha[i][j] == VALOR_X && t>0) {r = POSSIBLE; break;}
-          else break;
-        }
-      }
-      t=0;
-      for (i = line-1, j = column-1; i >= 0 && j >= 0; i--, j--) {
-        if(r==POSSIBLE) break;
-        else {
-          if(e.grelha[i][j] == VALOR_O) t++;
-          else if(e.grelha[i][j] == VALOR_X && t>0) {r = POSSIBLE; break;}
-          else break;
-        }
-      }
-      t=0;
-      for (i = line+1, j = column-1; i < 8 && j >= 0; i++, j--) {
-        if(r==POSSIBLE) break;
-        else {
-          if(e.grelha[i][j] == VALOR_O) t++;
-          else if(e.grelha[i][j] == VALOR_X && t>0) {r = POSSIBLE; break;}
-          else break;
-        }
-      }
-      t=0;
-      for (i = line-1, j = column+1; i >= 0 && j < 8; i--, j++) {
-        if(r==POSSIBLE) break;
-        else {
-          if(e.grelha[i][j] == VALOR_O) t++;
-          else if(e.grelha[i][j] == VALOR_X && t>0) {r = POSSIBLE; break;}
+          if(e.grelha[i][j] == opponent) t++;
+          else if(e.grelha[i][j] == e.peca && t>0) {r = POSSIBLE; break;}
           else break;
         }
       }
     return r;
-    }
   }
 }
 
@@ -335,156 +280,83 @@ void endGame (ESTADO e)
 ESTADO preenche(ESTADO e, int line, int column)
 {
   int x = 0, y1 = 0, y2 = 0;
+  VALOR opponent;
 
-  if (e.peca == VALOR_O) {
+  if(e.peca == VALOR_O) opponent = VALOR_X;
+  else opponent = VALOR_O;
 
-    e.grelha[line][column] = VALOR_O;
-    for (j = column+1; j < 8; j++) {
-      if(e.grelha[line][j] == VALOR_X) x++;
-      else if (e.grelha[line][j] == VALOR_O && x>0) {
-        for (y2 = (j-1); y2>column; y2--) e.grelha[line][y2] = VALOR_O;
-        break;
-      }
-      else break;
+  e.grelha[line][column] = e.peca;
+
+  for (j = column+1; j < 8; j++) {
+    if(e.grelha[line][j] == opponent) x++;
+    else if (e.grelha[line][j] == e.peca && x>0) {
+      for (y2 = (j-1); y2>column; y2--) e.grelha[line][y2] = e.peca;
+      break;
     }
-    x=0;
-    for (j = column-1; j >= 0; j--) {
-      if(e.grelha[line][j] == VALOR_X) x++;
-      else if (e.grelha[line][j] == VALOR_O && x>0) {
-        for (y2 = (j+1); y2<column; y2++) e.grelha[line][y2] = VALOR_O;
-        break;
-      }
-      else break;
-    }
-    x=0;
-    for (i = line+1; i < 8; i++) {
-      if(e.grelha[i][column] == VALOR_X) x++;
-      else if (e.grelha[i][column] == VALOR_O && x>0) {
-        for (y1 = (i-1); y1>line; y1--) e.grelha[y1][column] = VALOR_O;
-        break;
-      }
-      else break;
-    }
-    x=0;
-    for (i = line-1; i >= 0; i--) {
-      if(e.grelha[i][column] == VALOR_X) x++;
-      else if (e.grelha[i][column] == VALOR_O && x>0) {
-        for (y1 = (i+1); y1<line; y1++) e.grelha[y1][column] = VALOR_O;
-        break;
-    }
-      else break;
-    }
-    x=0;
-    for (i = line+1, j = column+1; i < 8 && j < 8; i++, j++) {
-      if(e.grelha[i][j] == VALOR_X) x++;
-      else if (e.grelha[i][j] == VALOR_O && x>0) {
-        for (y1 = (i-1), y2 = (j-1); y1>line, y2>column; y1--, y2--) e.grelha[y1][y2] = VALOR_O;
-        break;
-    }
-      else break;
-    }
-    x=0;
-    for (i = line-1, j = column-1; i >= 0 && j >= 0; i--, j--) {
-      if(e.grelha[i][j] == VALOR_X) x++;
-      else if (e.grelha[i][j] == VALOR_O && x>0) {
-        for (y1 = (i+1), y2 = (j+1); y1<line, y2<column; y1++, y2++) e.grelha[y1][y2] = VALOR_O;
-        break;
-    }
-      else break;
-    }
-    x=0;
-    for (i = line+1, j = column-1; i < 8 && j >= 0; i++, j--) {
-      if(e.grelha[i][j] == VALOR_X) x++;
-      else if (e.grelha[i][j] == VALOR_O && x>0) {
-        for (y1 = (i-1), y2 = (j+1); y1>line, y2<column; y1--, y2++) e.grelha[y1][y2] = VALOR_O;
-        break;
-    }
-      else break;
-    }
-    x=0;
-    for (i = line-1, j = column+1; i >= 0 && j < 8; i--, j++) {
-      if(e.grelha[i][j] == VALOR_X) x++;
-      else if (e.grelha[i][j] == VALOR_O && x>0) {
-        for (y1 = (i+1), y2 = (j-1); y1<line, y2>column; y1++, y2--) e.grelha[y1][y2] = VALOR_O;
-        break;
-    }
-      else break;
-    }
+    else break;
   }
-  else {
-    e.grelha[line][column] = VALOR_X;
-
-    for (j = column+1; j < 8; j++) {
-      if(e.grelha[line][j] == VALOR_O) x++;
-      else if (e.grelha[line][j] == VALOR_X && x>0) {
-        for (y2 = (j-1); y2>column; y2--) e.grelha[line][y2] = VALOR_X;
-        break;
-      }
-      else break;
+  x=0;
+  for (j = column-1; j >= 0; j--) {
+    if(e.grelha[line][j] == opponent) x++;
+    else if (e.grelha[line][j] == e.peca && x>0) {
+      for (y2 = (j+1); y2<column; y2++) e.grelha[line][y2] = e.peca;
+      break;
     }
-    x=0;
-    for (j = column-1; j >= 0; j--) {
-      if(e.grelha[line][j] == VALOR_O) x++;
-      else if (e.grelha[line][j] == VALOR_X && x>0) {
-        for (y2 = (j+1); y2<column; y2++) e.grelha[line][y2] = VALOR_X;
-        break;
-      }
-      else break;
+    else break;
+  }
+  x=0;
+  for (i = line+1; i < 8; i++) {
+    if(e.grelha[i][column] == opponent) x++;
+    else if (e.grelha[i][column] == e.peca && x>0) {
+      for (y1 = (i-1); y1>line; y1--) e.grelha[y1][column] = e.peca;
+      break;
     }
-    x=0;
-    for (i = line+1; i < 8; i++) {
-      if(e.grelha[i][column] == VALOR_O) x++;
-      else if (e.grelha[i][column] == VALOR_X && x>0) {
-        for (y1 = (i-1); y1>line; y1--) e.grelha[y1][column] = VALOR_X;
-        break;
-      }
-      else break;
+    else break;
+  }
+  x=0;
+  for (i = line-1; i >= 0; i--) {
+    if(e.grelha[i][column] == opponent) x++;
+    else if (e.grelha[i][column] == e.peca && x>0) {
+      for (y1 = (i+1); y1<line; y1++) e.grelha[y1][column] = e.peca;
+      break;
     }
-    x=0;
-    for (i = line-1; i >= 0; i--) {
-      if(e.grelha[i][column] == VALOR_O) x++;
-      else if (e.grelha[i][column] == VALOR_X && x>0) {
-        for (y1 = (i+1); y1<line; y1++) e.grelha[y1][column] = VALOR_X;
-        break;
+    else break;
+  }
+  x=0;
+  for (i = line+1, j = column+1; i < 8 && j < 8; i++, j++) {
+    if(e.grelha[i][j] == opponent) x++;
+    else if (e.grelha[i][j] == e.peca && x>0) {
+      for (y1 = (i-1), y2 = (j-1); y1>line && y2>column; y1--, y2--) e.grelha[y1][y2] = e.peca;
+      break;
     }
-      else break;
+    else break;
+  }
+  x=0;
+  for (i = line-1, j = column-1; i >= 0 && j >= 0; i--, j--) {
+    if(e.grelha[i][j] == opponent) x++;
+    else if (e.grelha[i][j] == e.peca && x>0) {
+      for (y1 = (i+1), y2 = (j+1); y1<line && y2<column; y1++, y2++) e.grelha[y1][y2] = e.peca;
+      break;
     }
-    x=0;
-    for (i = line+1, j = column+1; i < 8 && j < 8; i++, j++) {
-      if(e.grelha[i][j] == VALOR_O) x++;
-      else if (e.grelha[i][j] == VALOR_X && x>0) {
-        for (y1 = (i-1), y2 = (j-1); y1>line, y2>column; y1--, y2--) e.grelha[y1][y2] = VALOR_X;
-        break;
+    else break;
+  }
+  x=0;
+  for (i = line+1, j = column-1; i < 8 && j >= 0; i++, j--) {
+    if(e.grelha[i][j] == opponent) x++;
+    else if (e.grelha[i][j] == e.peca && x>0) {
+      for (y1 = (i-1), y2 = (j+1); y1>line && y2<column; y1--, y2++) e.grelha[y1][y2] = e.peca;
+      break;
     }
-      else break;
+    else break;
+  }
+  x=0;
+  for (i = line-1, j = column+1; i >= 0 && j < 8; i--, j++) {
+    if(e.grelha[i][j] == opponent) x++;
+    else if (e.grelha[i][j] == e.peca && x>0) {
+      for (y1 = (i+1), y2 = (j-1); y1<line && y2>column; y1++, y2--) e.grelha[y1][y2] = e.peca;
+      break;
     }
-    x=0;
-    for (i = line-1, j = column-1; i >= 0 && j >= 0; i--, j--) {
-      if(e.grelha[i][j] == VALOR_O) x++;
-      else if (e.grelha[i][j] == VALOR_X && x>0) {
-        for (y1 = (i+1), y2 = (j+1); y1<line, y2<column; y1++, y2++) e.grelha[y1][y2] = VALOR_X;
-        break;
-    }
-      else break;
-    }
-    x=0;
-    for (i = line+1, j = column-1; i < 8 && j >= 0; i++, j--) {
-      if(e.grelha[i][j] == VALOR_O) x++;
-      else if (e.grelha[i][j] == VALOR_X && x>0) {
-        for (y1 = (i-1), y2 = (j+1); y1>line, y2<column; y1--, y2++) e.grelha[y1][y2] = VALOR_X;
-        break;
-    }
-      else break;
-    }
-    x=0;
-    for (i = line-1, j = column+1; i >= 0 && j < 8; i--, j++) {
-      if(e.grelha[i][j] == VALOR_O) x++;
-      else if (e.grelha[i][j] == VALOR_X && x>0) {
-        for (y1 = (i+1), y2 = (j-1); y1<line, y2>column; y1++, y2--) e.grelha[y1][y2] = VALOR_X;
-        break;
-    }
-      else break;
-    }
+    else break;
   }
   return e;
 }
@@ -515,6 +387,11 @@ int fimJogo(ESTADO e, int *var)
         else c = 'X';
         printf("Não existem jogadas válidas para o jogador %c\n",c);
         endGame(e); r = 0;
+      }
+      else if ((e.modo = '1')) {
+        if (e.nivel == 1) botN1(e);
+        else if (e.nivel == 2) botN2(e);
+        r = 1;
       }
       else r = 1;
   }
@@ -598,14 +475,13 @@ ESTADO jogada(ESTADO e, int line, int column, int* var)
  * @param cmd2 nome do ficheiro escolhido pelo utilizador
  * @return estado substituído pelo estado do jogo no ficheiro
  */
-ESTADO leFicheiro(ESTADO e,char *cmd2,int* var) // se ficheiro não existir, não dar erro!
+ESTADO leFicheiro(ESTADO e,char *cmd2,int* var)
 {
   char mode,peca,level; int c,i=0,j=0;
   FILE *file;
   file = fopen(cmd2,"r+");
 
   if(file == NULL) printf("Não existe nenhum ficheiro de jogo com o nome inserido.\n");
-  
   else {
     fscanf(file,"%c %c %c",&mode,&peca,&level);
 
@@ -644,5 +520,27 @@ ESTADO leFicheiro(ESTADO e,char *cmd2,int* var) // se ficheiro não existir, nã
     fclose(file);
     if(fimJogo(e,var)==0) *var = 1;
   }
+  return e;
+}
+
+ESTADO campeonato(ESTADO e,char *cmd2,int* var)
+{
+  char mode,peca,level; int c,i=0,j=0;
+  FILE *file;
+  file = fopen(cmd2,"r+"); // ou "w+"?
+
+  if(file == NULL) { // começar jogo A X 3; gravar; adversário X, nós O;
+    // inicializa o jogo
+    e = iniciaE(e);
+    e.peca = VALOR_X;
+    e.modo = '1';
+    e.nivel = 3;
+    // grava em ficheiro
+    printf("\nModo de Jogo Automático\nNível do bot: 3\n");
+    printE(e,cmd2);
+  }/*
+  else { // ler tabuleiro; fazer jogada; gravar;
+
+  }*/
   return e;
 }

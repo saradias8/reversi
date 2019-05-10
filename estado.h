@@ -24,12 +24,14 @@ static int var=1, tpm=0, variavel=0;
 int i,l,j;
 char* string[MAX];
 
+ESTADO iniciaE(ESTADO);
 int listAS(ESTADO);
 void printa(ESTADO,int,int);
 void printE(ESTADO,char*);
 ESTADO preenche(ESTADO,int,int);
 ESTADO jogada(ESTADO,int,int,int*);
 ESTADO leFicheiro(ESTADO,char*,int*);
+ESTADO campeonato(ESTADO,char*,int*);
 void interpretador(ESTADO);
 VALOR pecas(ESTADO,int,int);
 int scoreO(ESTADO);

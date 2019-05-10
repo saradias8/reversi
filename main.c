@@ -9,23 +9,6 @@
 ESTADO e = {0};
 
 /**
- * @brief Inicializa tabuleiro.
- * @param e estado atual do jogo
- * @return ESTADO inicializado
- */
-ESTADO iniciaE(ESTADO e)
-{
-  for (l = 0; l < 8; l++)
-    for (j = 0; j < 8; j++) e.grelha[l][j] = VAZIA;
-  e.grelha[3][4] = VALOR_X;
-  e.grelha[4][3] = VALOR_X;
-  e.grelha[3][3] = VALOR_O;
-  e.grelha[4][4] = VALOR_O;
-
-  return e;
-}
-
-/**
  * @brief Executa o input do utilizador.
  * @param e estado atual do jogo
  * @param linha input do utilizador
@@ -173,6 +156,15 @@ ESTADO commands(ESTADO e,char linha[],int* var)
       }
       break;
 
+    case 'C':
+      if(cmd2){
+        clean();
+        e = campeonato(e,cmd2,var);
+        *var = 0;
+      }
+      else printf("Comando inválido\n");
+      break;
+
     case 'Q':
       printf("Até à próxima!\n");
       exit(0);
@@ -214,6 +206,7 @@ void menu()
   printf("-> H : receber sugestão de jogada\n");
   printf("-> U : desfazer última jogada\n");
   printf("-> A <peca> <nivel> : começar jogo com bot com peça <peca> e nível <nivel> (3 níveis disponíveis)\n");
+  printf("-> C <ficheiro> : começar um campeonato\n");
   printf("-> Q : sair do jogo\n\n");
 }
 

@@ -36,6 +36,22 @@ bot.h
 
 /home/sara/li2/Reversi/estado.h
 
+/home/sara/li2/Reversi/main.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+ctype.h
+-
+estado.h
+/home/sara/li2/Reversi/estado.h
+stack.h
+/home/sara/li2/Reversi/stack.h
+bot.h
+/home/sara/li2/Reversi/bot.h
+
 /home/sara/li2/Reversi/stack.c
 stdio.h
 -
