@@ -525,7 +525,7 @@ ESTADO campeonato(ESTADO e,char *cmd2,int* var)
 {
   char peca,mode; int c,i=0,j=0;
   FILE *file;
-  file = fopen(cmd2,"r+"); // ou "w+"?
+  file = fopen(cmd2,"r");
 
   if(file == NULL) {
       // inicializa o jogo
@@ -533,9 +533,11 @@ ESTADO campeonato(ESTADO e,char *cmd2,int* var)
       e.peca = VALOR_X;
       e.modo = '1';
       e.nivel = 3;
+      file = fopen(cmd2,"w");
       // grava em ficheiro
-      printf("\nNovo campeonato\n\nModo de Jogo Automático\nNível do bot: 3\n");
+      printf("\nNovo campeonato\n\nModo de Jogo Automático\nNível do bot: 3\n\nTabuleiro enviado:\n");
       printE(e,cmd2);
+      fclose(file);
   }
   else {
       e.modo = '1';
