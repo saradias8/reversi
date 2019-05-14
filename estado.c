@@ -414,9 +414,10 @@ ESTADO jogada(ESTADO e, int line, int column, int* var)
     {
       tpm=0;
       e = preenche(e,line,column);
+      push(e);
       if(e.peca == VALOR_O) e.peca = VALOR_X;
       else e.peca = VALOR_O;
-      push(e);
+      //push(e);
       printa(e,1,1);
       if(cheio(e) == 0) {endGame(e); *var = 1; return e;}
       if(e.peca == VALOR_O) c = 'O';
@@ -447,6 +448,14 @@ ESTADO jogada(ESTADO e, int line, int column, int* var)
           else e.peca = VALOR_O;
         }
         botN2(e);
+      }
+      else if (e.modo == '1' && e.nivel == 3)
+      {
+        if(variavel == 1) {
+          if(e.peca == VALOR_O) e.peca = VALOR_X;
+          else e.peca = VALOR_O;
+        }
+        botN3(e,0);
       }
     }
     else {
@@ -565,7 +574,7 @@ ESTADO campeonato(ESTADO e,char *cmd2,int* var)
 
       // jogada do bot
       com = 1; // variável: case 1 bot doesnt call interpretador, logo faz printE
-      e = botN3(e,&com);
+      e = botN3(e,com);
       printf("\nTabuleiro enviado:\n");
       printE(e,cmd2);
       if(e.peca == VALOR_O) e.peca = VALOR_X;

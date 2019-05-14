@@ -11,7 +11,7 @@
  * @param column coluna da posição recebida pelo bot
  * @return estado atualizado com a jogada do bot
  */
-ESTADO jogadabot(ESTADO e, int line, int column, int* com)
+ESTADO jogadabot(ESTADO e, int line, int column, int com)
 {
   int c;
   line--;column--;
@@ -21,23 +21,17 @@ ESTADO jogadabot(ESTADO e, int line, int column, int* com)
 
   if(listAS(e) > 0)
   {
-    if(pecas(e,line,column) == POSSIBLE && line<8 && column<8)
-    {
-      tpm=0;
-      e = preenche(e,line,column);
-      printf("Posição da jogada do bot, peça %c: (%d,%d)\n",c,line+1,column+1);
-      if(e.peca == VALOR_O) e.peca = VALOR_X;
-      else e.peca = VALOR_O;
-    }
-    else printf("Jogada inválida.\n");
+    e = preenche(e,line,column);
+    printf("Posição da jogada do bot, peça %c: (%d,%d)\n",c,line+1,column+1);
+    if(e.peca == VALOR_O) e.peca = VALOR_X;
+    else e.peca = VALOR_O;
   }
-  else
-  {
+  else {
     if(e.peca == VALOR_O) e.peca = VALOR_X;
     else e.peca = VALOR_O;
   }
 
-  if(*com == 0) {
+  if(com == 0) {
     printa(e,1,1);
     interpretador(e);
   }
@@ -94,36 +88,44 @@ void botN2(ESTADO e)
                     l = i;
                     c = j;
                   }
-            }
-        }
+                }
+          }
   jogadabot(e,l+1,c+1,0);
 }
 
-ESTADO botN3(ESTADO e, int* com)
+
+ESTADO botN3(ESTADO e, int com) //position strategy && ponctuation tree
 {
-  int i, j, maior = 0, y, l, c;
-  ESTADO tmp;
+  int i, j, maior = -80, y, l, c;
+  ESTADO tmp; int tabu[8][8];
+
+  tabu[0][0] = 99; tabu[0][1] = -8; tabu[0][2] = 8; tabu[0][3] = 6; tabu[0][4] = 6; tabu[0][5] = 8; tabu[0][6] = -8; tabu[0][7] = 99;
+  tabu[1][0] = -8; tabu[1][1] = -24; tabu[1][2] = -4; tabu[1][3] = -3; tabu[1][4] = -3; tabu[1][5] = -4; tabu[1][6] = -24; tabu[1][7] = -8;
+  tabu[2][0] = 8; tabu[2][1] = -4; tabu[2][2] = 7; tabu[2][3] = 4; tabu[2][4] = 4; tabu[2][5] = 7; tabu[2][6] = -4; tabu[2][7] = 8;
+  tabu[3][0] = 6; tabu[3][1] = -3; tabu[3][2] = 4; tabu[3][3] = 0; tabu[3][4] = 0; tabu[3][5] = 4; tabu[3][6] = -3; tabu[3][7] = 6;
+  tabu[4][0] = 6; tabu[4][1] = -3; tabu[4][2] = 4; tabu[4][3] = 0; tabu[4][4] = 0; tabu[4][5] = 4; tabu[4][6] = -3; tabu[4][7] = 6;
+  tabu[5][0] = 8; tabu[5][1] = -4; tabu[5][2] = 7; tabu[5][3] = 4; tabu[5][4] = 4; tabu[5][5] = 7; tabu[5][6] = -4; tabu[5][7] = 8;
+  tabu[6][0] = -8; tabu[6][1] = -24; tabu[6][2] = -4; tabu[6][3] = -3; tabu[6][4] = -3; tabu[6][5] = -4; tabu[6][6] = -24; tabu[6][7] = -8;
+  tabu[7][0] = 99; tabu[7][1] = -8; tabu[7][2] = 8; tabu[7][3] = 6; tabu[7][4] = 6; tabu[7][5] = 8; tabu[7][6] = -8; tabu[7][7] = 99;
 
   for (i = 0; i < 8; i++)
-      for (j = 0; j < 8; j++)
-          if(pecas(e,i,j) == POSSIBLE)  {
-              tmp = preenche(e,i,j);
-              if (e.peca==VALOR_O) {
-                  y =scoreO(tmp) - scoreO(e);
-                  if (y>maior) {
-                    maior = y;
-                    l = i;
-                    c = j;
-                  }
-              } else if (e.peca==VALOR_X) {
-                  y =scoreX(tmp) - scoreX(e);
-                  if (y>maior) {
-                    maior = y;
-                    l = i;
-                    c = j;
-                  }
-            }
+    for (j = 0; j < 8; j++)
+      if(pecas(e,i,j) == POSSIBLE)
+        if (tabu[i][j]>maior) {
+          maior = tabu[i][j];
+          l = i;
+          c = j;
         }
+
+  if(listAS(e) > 0) simMoves();
+
+
+
   e = jogadabot(e,l+1,c+1,com);
   return e;
+}
+
+void simMoves()
+{
+
 }

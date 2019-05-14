@@ -34,21 +34,13 @@ ESTADO commands(ESTADO e,char linha[],int* var)
         while(cmd2[i]) {cmd2[i] = toupper(cmd2[i]); i++;}
         e = iniciaE(e);
 
-        if(*cmd2 == 'O') {
+        if(*cmd2 == 'O' || *cmd2 == 'X') {
             e.modo = '0';
             e.nivel = 0;
             clean();
             *var = 0;
-            e.peca = VALOR_O;
-            printa(e,1,1);
-            push(e);
-        }
-        else if (*cmd2 == 'X') {
-            e.modo = '0';
-            e.nivel = 0;
-            clean();
-            *var = 0;
-            e.peca = VALOR_X;
+            if (*cmd2 == 'O') e.peca = VALOR_O;
+            else e.peca = VALOR_X;
             printa(e,1,1);
             push(e);
         }
@@ -122,34 +114,30 @@ ESTADO commands(ESTADO e,char linha[],int* var)
         else if(*cmd2 == 'X') e.peca = VALOR_X;
         else printf("Comando inválido\n\n");
 
-        if(*cmd3 == '2' && e.peca == VALOR_X) {
-          printa(e,1,1); push(e);
+        if(*cmd3 == '2') {
+          if(e.peca == VALOR_X) printa(e,1,1);
           *var = 0;
           e.nivel = 2;
           e.modo = '1';
-          botN2(e);
-         }
-        else if(*cmd3 == '2' && e.peca == VALOR_O) {
-          *var = 0;
-          e.nivel = 2;
-          e.peca = VALOR_X;
-          e.modo = '1';
-          printa(e,1,1);
+          if(e.peca == VALOR_X) botN2(e);
+          else {e.peca = VALOR_X; printa(e,1,1);}
         }
-        else if(*cmd3 == '1' && e.peca == VALOR_O) {
-          *var = 0;
-          e.nivel = 1;
-          e.peca = VALOR_X;
-          e.modo = '1';
-          printa(e,1,1);
-        }
-        else if(*cmd3 == '1' && e.peca == VALOR_X) {
-          printa(e,1,1); push(e);
+        else if(*cmd3 == '1') {
+          if(e.peca == VALOR_X) printa(e,1,1);
           *var = 0;
           e.nivel = 1;
           e.modo = '1';
-          botN1(e);
-          }
+          if(e.peca == VALOR_X) botN2(e);
+          else {e.peca = VALOR_X; printa(e,1,1);}
+        }
+        else if(*cmd3 == '3') {
+          if(e.peca == VALOR_X) printa(e,1,1);
+          *var = 0;
+          e.nivel = 3;
+          e.modo = '1';
+          if(e.peca == VALOR_X) botN2(e);
+          else {e.peca = VALOR_X; printa(e,1,1);}
+        }
       } else {
         printf("Comando inválido\n");
         *var = 1;
