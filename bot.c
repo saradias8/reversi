@@ -93,12 +93,80 @@ void botN2(ESTADO e)
   jogadabot(e,l+1,c+1,0);
 }
 
+int minimaxValue(ESTADO e, VALOR original, VALOR current, int search)
+{
+  if( search == 5 || fimJogo(e,0) == 0)
+  {
+    if(original == VALOR_O) return scoreO(e) - scoreX(e);
+    else return scoreX(e) - scoreO(e);
+  }
+
+  VALOR opponent = VALOR_X;
+  if(e.peca == VALOR_X) opponent = VALOR_O;
+
+  if(listAS(e) == 0) return minimaxValue(e,original,opponent,search+1);
+  else {
+    int bestMove = -99999;
+    if(original != current) bestMove = 99999;
+
+    for (i = 0; i < 8; i++)
+      for (j = 0; j < 8; j++)
+        if(pecas(e,i,j) == POSSIBLE) {
+          ESTADO tmp = e;
+          tmp = preenche(e,i,j);
+          int val = minimaxValue(e,original,opponent,search +1);
+
+          if(original == current)
+            if(val > bestMove) bestMove = val;
+          else
+            if(val < bestMove) bestMove = val;
+        }
+    return bestMove;
+  }
+  return -1;
+}
+
+int minmaxDecision (ESTADO e)
+{
+  int x,y;
+  VALOR opponent = VALOR_X;
+  if(e.peca == VALOR_X) opponent = VALOR_O;
+
+  if(listAS(e) == 0) {x = -1; y = -1;}
+  else {
+    int bestMove = -99999;
+    int bestX,bestY;
+
+    for (i = 0; i < 8; i++)
+      for (j = 0; j < 8; j++)
+        if(pecas(e,i,j) == POSSIBLE) {
+          ESTADO tmp = e;
+          tmp = preenche(e,i,j);
+          int val = minimaxValue(tmp,e.peca,opponent,1);
+
+          if(val > bestMove){
+            bestMove = val;
+            bestX = i;
+            bestY = j;
+          }
+        }
+        x = bestX;
+        y = bestY;
+  }
+  return (x*10 + y);
+}
 
 ESTADO botN3(ESTADO e, int com) //position strategy && ponctuation tree
 {
-  int i, j, maior = -80, y, l, c;
+  int i, j, maior = -80, y, l, c, val;
   ESTADO tmp; int tabu[8][8];
 
+  val = minmaxDecision(e);
+
+  c = val % 10;
+  l = (val - c) / 10;
+
+/* //tentar juntar os dois quando funcionar
   tabu[0][0] = 99; tabu[0][1] = -8; tabu[0][2] = 8; tabu[0][3] = 6; tabu[0][4] = 6; tabu[0][5] = 8; tabu[0][6] = -8; tabu[0][7] = 99;
   tabu[1][0] = -8; tabu[1][1] = -24; tabu[1][2] = -4; tabu[1][3] = -3; tabu[1][4] = -3; tabu[1][5] = -4; tabu[1][6] = -24; tabu[1][7] = -8;
   tabu[2][0] = 8; tabu[2][1] = -4; tabu[2][2] = 7; tabu[2][3] = 4; tabu[2][4] = 4; tabu[2][5] = 7; tabu[2][6] = -4; tabu[2][7] = 8;
@@ -116,16 +184,7 @@ ESTADO botN3(ESTADO e, int com) //position strategy && ponctuation tree
           l = i;
           c = j;
         }
-
-  if(listAS(e) > 0) simMoves();
-
-
-
+*/
   e = jogadabot(e,l+1,c+1,com);
   return e;
-}
-
-void simMoves()
-{
-
 }

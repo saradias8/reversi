@@ -125,18 +125,13 @@ VALOR pecas(ESTADO e, int line, int column)
 int listAS(ESTADO e)
 {
   int c = 0; int i,j;
-  char line[2],column[10];
+  int a[MAX];
 
   for(i=0;i<8;i++)
-    for (j=0;j<8;j++) {
+    for (j=0;j<8;j++)
       if (pecas(e,i,j)==POSSIBLE) {
-        sprintf(line, "%d", i);
-        sprintf(column, "%d", j);
-        strcat(line,column);
-        string[c] = line;
-        c++;
+        a[c] = i*10 + j; c++;
       }
-    }
   return c;
 }
 
