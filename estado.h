@@ -21,7 +21,6 @@ typedef struct estado {
 } ESTADO;
 
 static int var=1, tpm=0, variavel=0, com=0;
-int i,l,j;
 char* string[MAX];
 
 ESTADO iniciaE(ESTADO);

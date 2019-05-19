@@ -106,7 +106,6 @@ ESTADO commands(ESTADO e,char linha[],int* var)
         e.modo = '1';
 
         while(cmd2[i]) {cmd2[i] = toupper(cmd2[i]); i++;}
-        i=0;
 
         e = iniciaE(e);
 
@@ -120,7 +119,7 @@ ESTADO commands(ESTADO e,char linha[],int* var)
           e.nivel = 2;
           e.modo = '1';
           if(e.peca == VALOR_X) botN2(e);
-          else {e.peca = VALOR_X; printa(e,1,1);}
+          else {push(e); e.peca = VALOR_X; printa(e,1,1);}
         }
         else if(*cmd3 == '1') {
           if(e.peca == VALOR_X) printa(e,1,1);
@@ -128,7 +127,7 @@ ESTADO commands(ESTADO e,char linha[],int* var)
           e.nivel = 1;
           e.modo = '1';
           if(e.peca == VALOR_X) botN2(e);
-          else {e.peca = VALOR_X; printa(e,1,1);}
+          else {push(e); e.peca = VALOR_X; printa(e,1,1);}
         }
         else if(*cmd3 == '3') {
           if(e.peca == VALOR_X) printa(e,1,1);
@@ -136,12 +135,12 @@ ESTADO commands(ESTADO e,char linha[],int* var)
           e.nivel = 3;
           e.modo = '1';
           if(e.peca == VALOR_X) botN2(e);
-          else {e.peca = VALOR_X; printa(e,1,1);}
+          else {push(e); e.peca = VALOR_X; printa(e,1,1);}
         }
       } else {
         printf("Comando inválido\n");
         *var = 1;
-      }
+        }
       break;
 
     case 'C':

@@ -40,7 +40,7 @@ ESTADO peek()
 }
 
 /**
- * @brief Remove o último estado adicionado à stack;
+ * @brief Remove o último estado adicionado à stack.
  */
 void pop()
 {

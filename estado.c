@@ -12,14 +12,15 @@
  */
 ESTADO iniciaE(ESTADO e)
 {
-  for (l = 0; l < 8; l++)
-    for (j = 0; j < 8; j++) e.grelha[l][j] = VAZIA;
-  e.grelha[3][4] = VALOR_X;
-  e.grelha[4][3] = VALOR_X;
-  e.grelha[3][3] = VALOR_O;
-  e.grelha[4][4] = VALOR_O;
+    int l, j;
+    for (l = 0; l < 8; l++)
+        for (j = 0; j < 8; j++) e.grelha[l][j] = VAZIA;
+    e.grelha[3][4] = VALOR_X;
+    e.grelha[4][3] = VALOR_X;
+    e.grelha[3][3] = VALOR_O;
+    e.grelha[4][4] = VALOR_O;
 
-  return e;
+    return e;
 }
 
 /**
@@ -129,9 +130,9 @@ int listAS(ESTADO e)
 
   for(i=0;i<8;i++)
     for (j=0;j<8;j++)
-      if (pecas(e,i,j)==POSSIBLE) {
-        a[c] = i*10 + j; c++;
-      }
+      if (pecas(e,i,j)==POSSIBLE)
+        a[c++] = i*10 + j;
+
   return c;
 }
 
@@ -272,7 +273,7 @@ void endGame (ESTADO e)
  */
 ESTADO preenche(ESTADO e, int line, int column)
 {
-  int x = 0, y1 = 0, y2 = 0;
+  int x = 0, y1 = 0, y2 = 0, i, j;
   VALOR opponent;
 
   if(e.peca == VALOR_O) opponent = VALOR_X;
@@ -360,7 +361,7 @@ int fimJogo(ESTADO e, int *var)
 
   if(cheio(e) == 0) {
       endGame(e);
-      *var= 1;
+      *var = 1; r = 0;
   }
   else if(scoreO(e) == 0 || scoreX(e) == 0){
       if(scoreO(e) == 0) printf("Não existem jogadas válidas para o jogador O\n");
@@ -384,6 +385,7 @@ int fimJogo(ESTADO e, int *var)
       else if ((e.modo = '1')) {
         if (e.nivel == 1) botN1(e);
         else if (e.nivel == 2) botN2(e);
+        else if (e.nivel == 3) botN3(e,0);
         r = 1;
       }
       else r = 1;
@@ -412,7 +414,6 @@ ESTADO jogada(ESTADO e, int line, int column, int* var)
       push(e);
       if(e.peca == VALOR_O) e.peca = VALOR_X;
       else e.peca = VALOR_O;
-      //push(e);
       printa(e,1,1);
       if(cheio(e) == 0) {endGame(e); *var = 1; return e;}
       if(e.peca == VALOR_O) c = 'O';
@@ -582,4 +583,5 @@ ESTADO campeonato(ESTADO e,char *cmd2,int* var)
   }
   fclose(file);
   return e;
+
 }

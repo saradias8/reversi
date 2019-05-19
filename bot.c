@@ -3,6 +3,7 @@
 #include <string.h>
 #include "estado.h"
 #include "stack.h"
+#include "bot.h"
 
 /**
  * @brief Efetua a jogada do bot.
@@ -13,11 +14,8 @@
  */
 ESTADO jogadabot(ESTADO e, int line, int column, int com)
 {
-  int c;
-  line--;column--;
-
+  char c = 'X';
   if(e.peca == VALOR_O) c = 'O';
-  else c = 'X';
 
   if(listAS(e) > 0)
   {
@@ -30,7 +28,6 @@ ESTADO jogadabot(ESTADO e, int line, int column, int com)
     if(e.peca == VALOR_O) e.peca = VALOR_X;
     else e.peca = VALOR_O;
   }
-
   if(com == 0) {
     printa(e,1,1);
     interpretador(e);
@@ -58,7 +55,7 @@ void botN1(ESTADO e)
   j = a[n] % 10;
   i = (a[n] - j) / 10;
 
-  jogadabot(e,i+1,j+1,0);
+  jogadabot(e,i,j,0);
 }
 
 /**
@@ -90,84 +87,73 @@ void botN2(ESTADO e)
                   }
                 }
           }
-  jogadabot(e,l+1,c+1,0);
+  jogadabot(e,l,c,0);
 }
 
-int minimaxValue(ESTADO e, VALOR original, VALOR current, int search)
+/**
+ * @brief Função minmmax.
+ * @param e estado atual do jogo
+ * @param inicial peça do jogador inicial
+ * @param opponent peça do jogador adversário
+ * @param search profundidade da pesquisa de jogadas
+ * @return
+ */
+int minmaxmanny (ESTADO e, VALOR inicial, VALOR opponent, int search)
 {
-  if( search == 5 || fimJogo(e,0) == 0)
-  {
-    if(original == VALOR_O) return scoreO(e) - scoreX(e);
-    else return scoreX(e) - scoreO(e);
+  ESTADO tmp;
+  int val = 0, bestMove = -9999, x = 0, y = 0, i, j;
+
+  if (search == 5) {
+    if (inicial == VALOR_X) return(scoreX(e) - scoreO(e));
+    else return(scoreO(e) - scoreX(e));
   }
-
-  VALOR opponent = VALOR_X;
-  if(e.peca == VALOR_X) opponent = VALOR_O;
-
-  if(listAS(e) == 0) return minimaxValue(e,original,opponent,search+1);
   else {
-    int bestMove = -99999;
-    if(original != current) bestMove = 99999;
-
     for (i = 0; i < 8; i++)
       for (j = 0; j < 8; j++)
         if(pecas(e,i,j) == POSSIBLE) {
-          ESTADO tmp = e;
-          tmp = preenche(e,i,j);
-          int val = minimaxValue(e,original,opponent,search +1);
+          tmp = e; tmp = preenche(e,i,j);
+          tmp.peca = e.peca == inicial ? opponent : inicial;
 
-          if(original == current)
-            if(val > bestMove) bestMove = val;
-          else
-            if(val < bestMove) bestMove = val;
-        }
-    return bestMove;
-  }
-  return -1;
-}
+          val = minmaxmanny(tmp,inicial,opponent,search+1);
 
-int minmaxDecision (ESTADO e)
-{
-  int x,y;
-  VALOR opponent = VALOR_X;
-  if(e.peca == VALOR_X) opponent = VALOR_O;
-
-  if(listAS(e) == 0) {x = -1; y = -1;}
-  else {
-    int bestMove = -99999;
-    int bestX,bestY;
-
-    for (i = 0; i < 8; i++)
-      for (j = 0; j < 8; j++)
-        if(pecas(e,i,j) == POSSIBLE) {
-          ESTADO tmp = e;
-          tmp = preenche(e,i,j);
-          int val = minimaxValue(tmp,e.peca,opponent,1);
-
-          if(val > bestMove){
+          if (e.peca == inicial) {
+            if (val > bestMove) {
+                bestMove = val;
+                x = i;
+                y = j;
+            }
+          }
+          else if (bestMove == -9999 || val < bestMove) {
             bestMove = val;
-            bestX = i;
-            bestY = j;
+            x = i;
+            y = j;
           }
         }
-        x = bestX;
-        y = bestY;
+    if (search == 0) return (x*10+y);
+    else return bestMove;
   }
-  return (x*10 + y);
 }
 
-ESTADO botN3(ESTADO e, int com) //position strategy && ponctuation tree
+/**
+ * @brief Função responsável pelas jogadas do bot de nível 3. Estratégia:
+ * @param e estado atual do jogo
+ * @param com variável de decisão que determina se o bot está a jogar em campeonato ou contra utilizador
+ * @return estado atualizado com a jogada do bot
+ */
+ESTADO botN3(ESTADO e, int com)
 {
-  int i, j, maior = -80, y, l, c, val;
-  ESTADO tmp; int tabu[8][8];
+  int l = 0, c = 0, val;
+  //ESTADO tmp; int tabu[8][8];
+  if (listAS(e) != 0) {
+    if (e.peca == VALOR_O) val = minmaxmanny(e,e.peca,VALOR_X,0);
+    else val = minmaxmanny(e,e.peca,VALOR_O,0);
 
-  val = minmaxDecision(e);
+    c = val % 10;
+    l = (val - c) / 10;
+  }
 
-  c = val % 10;
-  l = (val - c) / 10;
-
-/* //tentar juntar os dois quando funcionar
-  tabu[0][0] = 99; tabu[0][1] = -8; tabu[0][2] = 8; tabu[0][3] = 6; tabu[0][4] = 6; tabu[0][5] = 8; tabu[0][6] = -8; tabu[0][7] = 99;
+ //tentar juntar os dois quando funcionar
+ /* tabu[0][0] = 99; tabu[0][1] = -8; tabu[0][2] = 8; tabu[0][3] = 6; tabu[0][4] = 6; tabu[0][5] = 8; tabu[0][6] = -8; tabu[0][7] = 99;
   tabu[1][0] = -8; tabu[1][1] = -24; tabu[1][2] = -4; tabu[1][3] = -3; tabu[1][4] = -3; tabu[1][5] = -4; tabu[1][6] = -24; tabu[1][7] = -8;
   tabu[2][0] = 8; tabu[2][1] = -4; tabu[2][2] = 7; tabu[2][3] = 4; tabu[2][4] = 4; tabu[2][5] = 7; tabu[2][6] = -4; tabu[2][7] = 8;
   tabu[3][0] = 6; tabu[3][1] = -3; tabu[3][2] = 4; tabu[3][3] = 0; tabu[3][4] = 0; tabu[3][5] = 4; tabu[3][6] = -3; tabu[3][7] = 6;
@@ -185,6 +171,6 @@ ESTADO botN3(ESTADO e, int com) //position strategy && ponctuation tree
           c = j;
         }
 */
-  e = jogadabot(e,l+1,c+1,com);
+  e = jogadabot(e,l,c,0);
   return e;
 }
