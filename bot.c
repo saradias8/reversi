@@ -86,22 +86,6 @@ void botN2(ESTADO e)
   jogadabot(e,l,c);
 }
 
-int tabuleiro(int i, int j)
-{
-    int tabu[8][8];
-
-    tabu[0][0] = 99; tabu[0][1] = -8; tabu[0][2] = 8; tabu[0][3] = 6; tabu[0][4] = 6; tabu[0][5] = 8; tabu[0][6] = -8; tabu[0][7] = 99;
-    tabu[1][0] = -8; tabu[1][1] = -24; tabu[1][2] = -4; tabu[1][3] = -3; tabu[1][4] = -3; tabu[1][5] = -4; tabu[1][6] = -24; tabu[1][7] = -8;
-    tabu[2][0] = 8; tabu[2][1] = -4; tabu[2][2] = 7; tabu[2][3] = 4; tabu[2][4] = 4; tabu[2][5] = 7; tabu[2][6] = -4; tabu[2][7] = 8;
-    tabu[3][0] = 6; tabu[3][1] = -3; tabu[3][2] = 4; tabu[3][3] = 0; tabu[3][4] = 0; tabu[3][5] = 4; tabu[3][6] = -3; tabu[3][7] = 6;
-    tabu[4][0] = 6; tabu[4][1] = -3; tabu[4][2] = 4; tabu[4][3] = 0; tabu[4][4] = 0; tabu[4][5] = 4; tabu[4][6] = -3; tabu[4][7] = 6;
-    tabu[5][0] = 8; tabu[5][1] = -4; tabu[5][2] = 7; tabu[5][3] = 4; tabu[5][4] = 4; tabu[5][5] = 7; tabu[5][6] = -4; tabu[5][7] = 8;
-    tabu[6][0] = -8; tabu[6][1] = -24; tabu[6][2] = -4; tabu[6][3] = -3; tabu[6][4] = -3; tabu[6][5] = -4; tabu[6][6] = -24; tabu[6][7] = -8;
-    tabu[7][0] = 99; tabu[7][1] = -8; tabu[7][2] = 8; tabu[7][3] = 6; tabu[7][4] = 6; tabu[7][5] = 8; tabu[7][6] = -8; tabu[7][7] = 99;
-
-    return tabu[i][j];
-}
-
 /**
  * @brief Função minmmax.
  * @param e estado atual do jogo
@@ -128,8 +112,6 @@ int minmaxmanny (ESTADO e, VALOR inicial, VALOR opponent, int search)
             tmp.peca = e.peca == inicial ? opponent : inicial;
 
             val = minmaxmanny(tmp,inicial,opponent,search+1);
-
-            val += tabuleiro(i,j);
 
             if (e.peca == inicial && val > bestMove) {
                 bestMove = val;
@@ -164,17 +146,6 @@ ESTADO botN3(ESTADO e)
     c = val % 10;
     l = (val - c) / 10;
   }
-
- /*
-  for (i = 0; i < 8; i++)
-    for (j = 0; j < 8; j++)
-      if(pecas(e,i,j) == POSSIBLE)
-        if (tabu[i][j]>maior) {
-          maior = tabu[i][j];
-          l = i;
-          c = j;
-        }
-*/
   e = jogadabot(e,l,c);
   return e;
 }

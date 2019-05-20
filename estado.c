@@ -158,7 +158,6 @@ void printa(ESTADO e, int m, int n)
   if(e.peca == VALOR_O) printf("\nVez do jogador O\n\n");
   else printf("\nVez do jogador X\n\n");
 
-  // Para o comando H
   ESTADO tmp = switchPeca(e);
   int val = minmaxmanny(e,e.peca,tmp.peca,0);
   int c1 = val % 10;
@@ -587,7 +586,15 @@ ESTADO campeonato(ESTADO e,char *cmd2,int* var)
 
       if(fimJogo(e,var)==0) {
         *var = 1;
-        //mudar o nome do ficheiro para <ficheiro>.g<pecaVencedora>
+        char *pec;
+        char tmp1[25];
+        char *g = ".g";
+        if (e.peca == VALOR_O) pec = "O";
+        else if (e.peca == VALOR_X) pec = "X";
+        strcat(tmp1,cmd2);
+        strcat(tmp1,g);
+        strcat(tmp1,pec);
+        printE(e,tmp1);
       }
   }
   fclose(file);
