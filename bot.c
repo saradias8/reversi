@@ -17,7 +17,7 @@ ESTADO jogadabot(ESTADO e, int line, int column, int com)
   char c = 'X';
   if(e.peca == VALOR_O) c = 'O';
 
-  if(listAS(e) > 0)
+  if(listAS(e) > 0 && e.grelha[line][column] == VAZIA)
   {
     e = preenche(e,line,column);
     printf("Posição da jogada do bot, peça %c: (%d,%d)\n",c,line+1,column+1);
@@ -29,7 +29,6 @@ ESTADO jogadabot(ESTADO e, int line, int column, int com)
     printa(e,1,1);
     interpretador(e);
   }
-
   return e;
 }
 
@@ -168,6 +167,6 @@ ESTADO botN3(ESTADO e, int com)
           c = j;
         }
 */
-  e = jogadabot(e,l,c,0);
+  e = jogadabot(e,l,c,com);
   return e;
 }

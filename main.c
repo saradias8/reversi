@@ -2,12 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <signal.h>
 #include "estado.h"
 #include "stack.h"
 #include "bot.h"
 
 ESTADO e = {0};
 static int var=1;
+pid_t getppid(void);
 
 /**
  * @brief Executa o input do utilizador.
@@ -118,25 +120,22 @@ ESTADO commands(ESTADO e,char linha[],int* var)
           if(e.peca == VALOR_X) printa(e,1,1);
           *var = 0;
           e.nivel = 2;
-          e.modo = '1';
           if(e.peca == VALOR_X) botN2(e);
-          else {push(e); e.peca = VALOR_X; printa(e,1,1);}
+          else {e.peca = VALOR_X; push(e); printa(e,1,1);}
         }
         else if(*cmd3 == '1') {
           if(e.peca == VALOR_X) printa(e,1,1);
           *var = 0;
           e.nivel = 1;
-          e.modo = '1';
-          if(e.peca == VALOR_X) botN2(e);
-          else {push(e); e.peca = VALOR_X; printa(e,1,1);}
+          if(e.peca == VALOR_X) botN1(e);
+          else {e.peca = VALOR_X; push(e); printa(e,1,1);}
         }
         else if(*cmd3 == '3') {
           if(e.peca == VALOR_X) printa(e,1,1);
           *var = 0;
           e.nivel = 3;
-          e.modo = '1';
-          if(e.peca == VALOR_X) botN2(e);
-          else {push(e); e.peca = VALOR_X; printa(e,1,1);}
+          if(e.peca == VALOR_X) botN3(e,0);
+          else {e.peca = VALOR_X; push(e); printa(e,1,1);}
         }
       } else {
         printf("Comando inválido\n");
@@ -156,6 +155,7 @@ ESTADO commands(ESTADO e,char linha[],int* var)
     case 'Q':
       printf("Até à próxima!\n");
       exit(0);
+      //kill(getppid(),SIGQUIT);
 
     default:
       printf("Comando inválido\n");

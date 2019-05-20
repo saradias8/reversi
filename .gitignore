@@ -1,9 +1,2 @@
 
 .idea
-cmake-build-debug
-doxygen
-doxygen-1.8.15.src
-html
-latex
-CMakeLists.txt
-mnt

@@ -436,7 +436,6 @@ ESTADO jogada(ESTADO e, int line, int column, int* var)
       if (e.modo == '1' && e.nivel == 1)
       {
         if(variavel == 1) e = switchPeca(e);
-          // serve para trocar a e.peca (chama o bot para verificar situação de fim de jogo)
         botN1(e);
       }
       else if (e.modo == '1' && e.nivel == 2)
@@ -528,22 +527,20 @@ ESTADO campeonato(ESTADO e,char *cmd2,int* var)
   FILE *file;
   file = fopen(cmd2,"r");
 
+  e.modo = '1';
+  e.nivel = 3;
+
   if(file == NULL) {
-      // inicializa o jogo
+
       e = iniciaE(e);
       e.peca = VALOR_X;
-      e.modo = '1';
-      e.nivel = 3;
       file = fopen(cmd2,"w");
-      // grava em ficheiro
+
       printf("\nNovo campeonato\n\nModo de Jogo Automático\nNível do bot: 3\n\nTabuleiro enviado:\n");
       printE(e,cmd2);
       fclose(file);
   }
   else {
-      e.modo = '1';
-      e.nivel = 3;
-      // lê peça
       if(fscanf(file,"%c %c",&mode,&peca)) ;
       else printf("Erro\n");
 
@@ -551,7 +548,7 @@ ESTADO campeonato(ESTADO e,char *cmd2,int* var)
       else e.peca = VALOR_X;
 
       fseek(file,6,SEEK_SET);
-      // lê tabuleiro
+
       printf("\nModo de Jogo Automático\nNível do bot: 3\n\nTabuleiro recebido:\n");
       if(e.peca == VALOR_O) printf("\nVez do jogador O\n\n");
       else printf("\nVez do jogador X\n\n");
@@ -559,13 +556,12 @@ ESTADO campeonato(ESTADO e,char *cmd2,int* var)
       printf("  1 2 3 4 5 6 7 8\n");
       printf("1 ");
       while((c = fgetc(file)) != EOF) {
-          if(c == 'X') {e.grelha[i][j] = VALOR_X; j++;printf("%c ",c);}
-          else if(c == 'O') {e.grelha[i][j] = VALOR_O; j++;printf("%c ",c);}
-          else if(c == '-') {e.grelha[i][j] = VAZIA; j++;printf("%c ",c);}
-          else if(c == '\n') {i++;if(i<8) printf("\n%d ",i+1); j=0;}
+          if(c == 'X') {e.grelha[i][j] = VALOR_X; j++; printf("%c ",c);}
+          else if(c == 'O') {e.grelha[i][j] = VALOR_O; j++; printf("%c ",c);}
+          else if(c == '-') {e.grelha[i][j] = VAZIA; j++; printf("%c ",c);}
+          else if(c == '\n') {i++; if(i<8) printf("\n%d ",i+1); j=0;}
       } printf("\n\n");
 
-      // jogada do bot
       e = botN3(e,1);
       printf("\nTabuleiro enviado:\n");
       printE(e,cmd2);

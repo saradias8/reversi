@@ -6,34 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/sara/li2/Reversi/bot.c
-stdio.h
--
-stdlib.h
--
-string.h
--
-estado.h
-/home/sara/li2/Reversi/estado.h
-stack.h
-/home/sara/li2/Reversi/stack.h
-bot.h
-/home/sara/li2/Reversi/bot.h
-
-/home/sara/li2/Reversi/bot.h
-
-/home/sara/li2/Reversi/estado.c
-stdio.h
--
-stdlib.h
--
-string.h
--
-estado.h
-/home/sara/li2/Reversi/estado.h
-stack.h
-/home/sara/li2/Reversi/stack.h
-bot.h
 /home/sara/li2/Reversi/bot.h
 
 /home/sara/li2/Reversi/estado.h
@@ -47,6 +19,8 @@ string.h
 -
 ctype.h
 -
+signal.h
+-
 estado.h
 /home/sara/li2/Reversi/estado.h
 stack.h
@@ -54,23 +28,5 @@ stack.h
 bot.h
 /home/sara/li2/Reversi/bot.h
 
-/home/sara/li2/Reversi/stack.c
-stdio.h
--
-stdlib.h
--
-string.h
--
-ctype.h
--
-malloc.h
--
-estado.h
-/home/sara/li2/Reversi/estado.h
-stack.h
 /home/sara/li2/Reversi/stack.h
-
-/home/sara/li2/Reversi/stack.h
-estado.h
-/home/sara/li2/Reversi/estado.h
 
