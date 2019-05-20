@@ -1,6 +1,5 @@
-#ifndef TESTES_STACK_H
-#define TESTES_STACK_H
-#include "estado.h"
+#ifndef STACK_H
+#define STACK_H
 
 struct Node {
   ESTADO estado;

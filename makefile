@@ -1,4 +1,4 @@
 gcc:
-	gcc -o reversi main.c estado.c stack.c bot.c
+	gcc -Wall -O2 -o reversi main.c estado.c stack.c bot.c
 clean:
 	rm reversi

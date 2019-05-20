@@ -23,6 +23,14 @@ ESTADO iniciaE(ESTADO e)
     return e;
 }
 
+ESTADO switchPeca(ESTADO e)
+{
+  if(e.peca == VALOR_O) e.peca = VALOR_X;
+  else e.peca = VALOR_O;
+
+  return e;
+}
+
 /**
  * @brief Verifica as posições onde o jogador atual pode jogar.
  * @param e estado atual do jogo
@@ -116,6 +124,7 @@ VALOR pecas(ESTADO e, int line, int column)
       }
     return r;
   }
+  return r;
 }
 
 /**
@@ -132,7 +141,7 @@ int listAS(ESTADO e)
     for (j=0;j<8;j++)
       if (pecas(e,i,j)==POSSIBLE)
         a[c++] = i*10 + j;
-
+  i=a[0];
   return c;
 }
 
@@ -373,8 +382,7 @@ int fimJogo(ESTADO e, int *var)
       else c = 'X';
       printf("Não existem jogadas válidas para o jogador %c\n",c);
 
-      if(e.peca == VALOR_O) e.peca = VALOR_X;
-      else e.peca = VALOR_O;
+      e = switchPeca(e);
 
       if(listAS(e) == 0) {
         if(e.peca == VALOR_O) c = 'O';
@@ -402,18 +410,16 @@ int fimJogo(ESTADO e, int *var)
  */
 ESTADO jogada(ESTADO e, int line, int column, int* var)
 {
-  char c; variavel = 0;
+  char c; int variavel = 0;
   line--; column--;
 
   if(listAS(e) > 0)
   {
     if(pecas(e,line,column) == POSSIBLE && line<8 && column<8)
     {
-      tpm=0;
       e = preenche(e,line,column);
       push(e);
-      if(e.peca == VALOR_O) e.peca = VALOR_X;
-      else e.peca = VALOR_O;
+      e = switchPeca(e);
       printa(e,1,1);
       if(cheio(e) == 0) {endGame(e); *var = 1; return e;}
       if(e.peca == VALOR_O) c = 'O';
@@ -423,34 +429,24 @@ ESTADO jogada(ESTADO e, int line, int column, int* var)
       {
         variavel = 1;
         printf("Não existem jogadas válidas para o jogador %c\n",c);
-        if(e.peca == VALOR_O) e.peca = VALOR_X;
-        else e.peca = VALOR_O;
+        e = switchPeca(e);
         if(e.modo == '0') printa(e,1,1);
       }
 
       if (e.modo == '1' && e.nivel == 1)
       {
-        if(variavel == 1) {
+        if(variavel == 1) e = switchPeca(e);
           // serve para trocar a e.peca (chama o bot para verificar situação de fim de jogo)
-          if(e.peca == VALOR_O) e.peca = VALOR_X;
-          else e.peca = VALOR_O;
-        }
         botN1(e);
       }
       else if (e.modo == '1' && e.nivel == 2)
       {
-        if(variavel == 1) {
-          if(e.peca == VALOR_O) e.peca = VALOR_X;
-          else e.peca = VALOR_O;
-        }
+        if(variavel == 1) e = switchPeca(e);
         botN2(e);
       }
       else if (e.modo == '1' && e.nivel == 3)
       {
-        if(variavel == 1) {
-          if(e.peca == VALOR_O) e.peca = VALOR_X;
-          else e.peca = VALOR_O;
-        }
+        if(variavel == 1) e = switchPeca(e);
         botN3(e,0);
       }
     }
@@ -464,8 +460,7 @@ ESTADO jogada(ESTADO e, int line, int column, int* var)
     if(e.peca == VALOR_O) c = 'O';
     else c = 'X';
     printf("Não existem jogadas válidas para o jogador %c\n",c);
-    if(e.peca == VALOR_O) e.peca = VALOR_X;
-    else e.peca = VALOR_O;
+    e = switchPeca(e);
   }
 
   interpretador(e);
@@ -486,10 +481,11 @@ ESTADO leFicheiro(ESTADO e,char *cmd2,int* var)
 
   if(file == NULL) printf("Não existe nenhum ficheiro de jogo com o nome inserido.\n");
   else {
-    fscanf(file,"%c %c %c",&mode,&peca,&level);
+    if(fscanf(file,"%c %c %c",&mode,&peca,&level)) ;
+    else printf("Erro\n");
 
     if(mode == 'M') {e.modo = '0'; printf("\nModo de Jogo Manual\n");}
-    else {e.modo = '1';printf("\nModo de Jogo Automático\nNível do bot: %c\n",level);}
+    else {e.modo = '1'; printf("\nModo de Jogo Automático\nNível do bot: %c\n",level);}
 
     if(peca == 'O') e.peca = VALOR_O;
     else e.peca = VALOR_X;
@@ -548,7 +544,8 @@ ESTADO campeonato(ESTADO e,char *cmd2,int* var)
       e.modo = '1';
       e.nivel = 3;
       // lê peça
-      fscanf(file,"%c %c",&mode,&peca);
+      if(fscanf(file,"%c %c",&mode,&peca)) ;
+      else printf("Erro\n");
 
       if(peca == 'O') e.peca = VALOR_O;
       else e.peca = VALOR_X;
@@ -569,12 +566,10 @@ ESTADO campeonato(ESTADO e,char *cmd2,int* var)
       } printf("\n\n");
 
       // jogada do bot
-      com = 1; // variável: case 1 bot doesnt call interpretador, logo faz printE
-      e = botN3(e,com);
+      e = botN3(e,1);
       printf("\nTabuleiro enviado:\n");
       printE(e,cmd2);
-      if(e.peca == VALOR_O) e.peca = VALOR_X;
-      else e.peca = VALOR_O;
+      e = switchPeca(e);
 
       if(fimJogo(e,var)==0) {
         *var = 1;

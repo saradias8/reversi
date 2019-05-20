@@ -21,13 +21,10 @@ ESTADO jogadabot(ESTADO e, int line, int column, int com)
   {
     e = preenche(e,line,column);
     printf("Posição da jogada do bot, peça %c: (%d,%d)\n",c,line+1,column+1);
-    if(e.peca == VALOR_O) e.peca = VALOR_X;
-    else e.peca = VALOR_O;
+    e = switchPeca(e);
   }
-  else {
-    if(e.peca == VALOR_O) e.peca = VALOR_X;
-    else e.peca = VALOR_O;
-  }
+  else { e = switchPeca(e); }
+
   if(com == 0) {
     printa(e,1,1);
     interpretador(e);
@@ -64,7 +61,7 @@ void botN1(ESTADO e)
  */
 void botN2(ESTADO e)
 {
-  int i, j, maior = 0, y, l, c;
+  int i, j, maior = 0, y, l=0, c=0;
   ESTADO tmp;
 
   for (i = 0; i < 8; i++)
@@ -111,23 +108,23 @@ int minmaxmanny (ESTADO e, VALOR inicial, VALOR opponent, int search)
     for (i = 0; i < 8; i++)
       for (j = 0; j < 8; j++)
         if(pecas(e,i,j) == POSSIBLE) {
-          tmp = e; tmp = preenche(e,i,j);
-          tmp.peca = e.peca == inicial ? opponent : inicial;
+            tmp = e; tmp = preenche(e,i,j);
+            tmp.peca = e.peca == inicial ? opponent : inicial;
 
-          val = minmaxmanny(tmp,inicial,opponent,search+1);
+            val = minmaxmanny(tmp,inicial,opponent,search+1);
 
-          if (e.peca == inicial) {
-            if (val > bestMove) {
+            if (e.peca == inicial) {
+              if (val > bestMove) {
+                  bestMove = val;
+                  x = i;
+                  y = j;
+              }
+            }
+            else if (bestMove == -9999 || val < bestMove) {
                 bestMove = val;
                 x = i;
                 y = j;
             }
-          }
-          else if (bestMove == -9999 || val < bestMove) {
-            bestMove = val;
-            x = i;
-            y = j;
-          }
         }
     if (search == 0) return (x*10+y);
     else return bestMove;
@@ -135,7 +132,7 @@ int minmaxmanny (ESTADO e, VALOR inicial, VALOR opponent, int search)
 }
 
 /**
- * @brief Função responsável pelas jogadas do bot de nível 3. Estratégia:
+ * @brief Função responsável pelas jogadas do bot de nível 3. Estratégia: minmax.
  * @param e estado atual do jogo
  * @param com variável de decisão que determina se o bot está a jogar em campeonato ou contra utilizador
  * @return estado atualizado com a jogada do bot

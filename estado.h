@@ -1,5 +1,5 @@
-#ifndef PROJ_ESTADO_H
-#define PROJ_ESTADO_H
+#ifndef ESTADO_H
+#define ESTADO_H
 #define MAX 1024
 
 /**
@@ -20,10 +20,8 @@ typedef struct estado {
     int nivel; // nivel do bot
 } ESTADO;
 
-static int var=1, tpm=0, variavel=0, com=0;
-char* string[MAX];
-
 ESTADO iniciaE(ESTADO);
+ESTADO switchPeca(ESTADO);
 int listAS(ESTADO);
 void printa(ESTADO,int,int);
 void printE(ESTADO,char*);
@@ -36,7 +34,6 @@ VALOR pecas(ESTADO,int,int);
 int scoreO(ESTADO);
 int scoreX(ESTADO);
 int cheio(ESTADO);
-void endGame(ESTADO);
 int fimJogo(ESTADO,int*);
 
 #endif //PROJ_ESTADO_H

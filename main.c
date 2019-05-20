@@ -7,6 +7,7 @@
 #include "bot.h"
 
 ESTADO e = {0};
+static int var=1;
 
 /**
  * @brief Executa o input do utilizador.
