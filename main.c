@@ -9,7 +9,6 @@
 
 ESTADO e = {0};
 static int var=1;
-pid_t getppid(void);
 
 /**
  * @brief Executa o input do utilizador.
@@ -134,7 +133,7 @@ ESTADO commands(ESTADO e,char linha[],int* var)
           if(e.peca == VALOR_X) printa(e,1,1);
           *var = 0;
           e.nivel = 3;
-          if(e.peca == VALOR_X) botN3(e,0);
+          if(e.peca == VALOR_X) botN3(e);
           else {e.peca = VALOR_X; push(e); printa(e,1,1);}
         }
       } else {
@@ -155,7 +154,6 @@ ESTADO commands(ESTADO e,char linha[],int* var)
     case 'Q':
       printf("Até à próxima!\n");
       exit(0);
-      //kill(getppid(),SIGQUIT);
 
     default:
       printf("Comando inválido\n");

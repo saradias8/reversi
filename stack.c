@@ -35,7 +35,7 @@ int isEmpty()
  */
 ESTADO peek()
 {
-  if (!isEmpty(top))
+  if (!isEmpty())
     return top->estado;
 }
 
@@ -68,9 +68,12 @@ void clean()
  */
 ESTADO do_undo(ESTADO e)
 {
+  VALOR tmp = e.peca;
   pop();
+
   if (top != NULL) {
     e = peek();
+    if (tmp==e.peca) e = switchPeca(e);
     printa(e,1,1);
     return e;
   }

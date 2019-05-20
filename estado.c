@@ -128,7 +128,7 @@ VALOR pecas(ESTADO e, int line, int column)
 }
 
 /**
- * @brief Dá a lista de posições onde o jogador atual pode jogar.
+ * @brief Forma a lista de posições onde o jogador atual pode jogar.
  * @param e estado atual do jogo
  * @return comprimento da lista das posições possíveis
  */
@@ -141,7 +141,7 @@ int listAS(ESTADO e)
     for (j=0;j<8;j++)
       if (pecas(e,i,j)==POSSIBLE)
         a[c++] = i*10 + j;
-  i=a[0];
+  //i=a[0];
   return c;
 }
 
@@ -155,9 +155,14 @@ void printa(ESTADO e, int m, int n)
 {
   char c = ' '; int i,j, p = 0;
 
-  if(e.peca == VALOR_O)
-    printf("\nVez do jogador O\n\n");
+  if(e.peca == VALOR_O) printf("\nVez do jogador O\n\n");
   else printf("\nVez do jogador X\n\n");
+
+  // Para o comando H
+  ESTADO tmp = switchPeca(e);
+  int val = minmaxmanny(e,e.peca,tmp.peca,0);
+  int c1 = val % 10;
+  int l1 = (val - c1) / 10;
 
   printf("  1 2 3 4 5 6 7 8 \n");
   for (i = 0; i < 8; i++) {
@@ -166,7 +171,11 @@ void printa(ESTADO e, int m, int n)
       if(e.grelha[i][j] == VALOR_O)      c = 'O';
       else if(e.grelha[i][j] == VALOR_X) c = 'X';
       else if(m == 0 && pecas(e,i,j) == POSSIBLE)  c = '.';
-      else if(n == 0 && pecas(e,i,j) == POSSIBLE && p == 0) {c = '?'; p = 1;}
+      else if(n == 0 && pecas(e,i,j) == POSSIBLE && p == 0 && j == c1 && i == l1)
+      {
+          c = '?';
+          p = 1;
+      }
       else if(e.grelha[i][j] == VAZIA)   c = '-';
       printf("%c ", c);
     }
@@ -231,8 +240,10 @@ void printE(ESTADO e, char* cmd2)
 int scoreO(ESTADO e)
 {
   int conta = 0; int i,j;
+
     for(i=0;i<8;i++)
       for(j=0;j<8;j++) if(e.grelha[i][j] == VALOR_O) conta++;
+
   return conta;
 }
 
@@ -244,8 +255,10 @@ int scoreO(ESTADO e)
 int scoreX(ESTADO e)
 {
   int conta = 0; int i,j;
+
   for(i=0;i<8;i++)
     for(j=0;j<8;j++) if(e.grelha[i][j] == VALOR_X) conta++;
+
   return conta;
 }
 
@@ -257,8 +270,10 @@ int scoreX(ESTADO e)
 int cheio(ESTADO e)
 {
   int r=0; int i,j;
+
   for(i=0;i<8;i++)
     for(j=0;j<8;j++) if(e.grelha[i][j] == VAZIA) {r++; break;}
+
   return r;
 }
 
@@ -380,20 +395,20 @@ int fimJogo(ESTADO e, int *var)
   else if(listAS(e) == 0) {
       if(e.peca == VALOR_O) c = 'O';
       else c = 'X';
-      printf("Não existem jogadas válidas para o jogador %c\n",c);
+      if(e.campeonato == 0) printf("Não existem jogadas válidas para o jogador %c\n",c);
 
       e = switchPeca(e);
 
       if(listAS(e) == 0) {
         if(e.peca == VALOR_O) c = 'O';
         else c = 'X';
-        printf("Não existem jogadas válidas para o jogador %c\n",c);
+        if(e.campeonato == 0) printf("Não existem jogadas válidas para o jogador %c\n",c);
         endGame(e); r = 0;
       }
       else if ((e.modo = '1')) {
         if (e.nivel == 1) botN1(e);
         else if (e.nivel == 2) botN2(e);
-        else if (e.nivel == 3) botN3(e,0);
+        else if (e.nivel == 3 && e.campeonato == 0) botN3(e);
         r = 1;
       }
       else r = 1;
@@ -412,6 +427,7 @@ ESTADO jogada(ESTADO e, int line, int column, int* var)
 {
   char c; int variavel = 0;
   line--; column--;
+  e.campeonato = 0;
 
   if(listAS(e) > 0)
   {
@@ -446,7 +462,7 @@ ESTADO jogada(ESTADO e, int line, int column, int* var)
       else if (e.modo == '1' && e.nivel == 3)
       {
         if(variavel == 1) e = switchPeca(e);
-        botN3(e,0);
+        botN3(e);
       }
     }
     else {
@@ -523,12 +539,13 @@ ESTADO leFicheiro(ESTADO e,char *cmd2,int* var)
 
 ESTADO campeonato(ESTADO e,char *cmd2,int* var)
 {
-  char peca,mode; int c,i=0,j=0;
+  char peca,mode,c;int i=0,j=0;
   FILE *file;
   file = fopen(cmd2,"r");
 
   e.modo = '1';
   e.nivel = 3;
+  e.campeonato = 1;
 
   if(file == NULL) {
 
@@ -562,7 +579,8 @@ ESTADO campeonato(ESTADO e,char *cmd2,int* var)
           else if(c == '\n') {i++; if(i<8) printf("\n%d ",i+1); j=0;}
       } printf("\n\n");
 
-      e = botN3(e,1);
+      if(listAS(e) == 0) printf("Não existem jogadas válidas para o jogador %c\n",peca);
+      e = botN3(e);
       printf("\nTabuleiro enviado:\n");
       printE(e,cmd2);
       e = switchPeca(e);

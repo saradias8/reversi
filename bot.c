@@ -12,7 +12,7 @@
  * @param column coluna da posição recebida pelo bot
  * @return estado atualizado com a jogada do bot
  */
-ESTADO jogadabot(ESTADO e, int line, int column, int com)
+ESTADO jogadabot(ESTADO e, int line, int column)
 {
   char c = 'X';
   if(e.peca == VALOR_O) c = 'O';
@@ -23,9 +23,9 @@ ESTADO jogadabot(ESTADO e, int line, int column, int com)
     printf("Posição da jogada do bot, peça %c: (%d,%d)\n",c,line+1,column+1);
     e = switchPeca(e);
   }
-  else { e = switchPeca(e); }
+  else e = switchPeca(e);
 
-  if(com == 0) {
+  if(e.campeonato == 0) {
     printa(e,1,1);
     interpretador(e);
   }
@@ -51,7 +51,7 @@ void botN1(ESTADO e)
   j = a[n] % 10;
   i = (a[n] - j) / 10;
 
-  jogadabot(e,i,j,0);
+  jogadabot(e,i,j);
 }
 
 /**
@@ -83,7 +83,23 @@ void botN2(ESTADO e)
                   }
                 }
           }
-  jogadabot(e,l,c,0);
+  jogadabot(e,l,c);
+}
+
+int tabuleiro(int i, int j)
+{
+    int tabu[8][8];
+
+    tabu[0][0] = 99; tabu[0][1] = -8; tabu[0][2] = 8; tabu[0][3] = 6; tabu[0][4] = 6; tabu[0][5] = 8; tabu[0][6] = -8; tabu[0][7] = 99;
+    tabu[1][0] = -8; tabu[1][1] = -24; tabu[1][2] = -4; tabu[1][3] = -3; tabu[1][4] = -3; tabu[1][5] = -4; tabu[1][6] = -24; tabu[1][7] = -8;
+    tabu[2][0] = 8; tabu[2][1] = -4; tabu[2][2] = 7; tabu[2][3] = 4; tabu[2][4] = 4; tabu[2][5] = 7; tabu[2][6] = -4; tabu[2][7] = 8;
+    tabu[3][0] = 6; tabu[3][1] = -3; tabu[3][2] = 4; tabu[3][3] = 0; tabu[3][4] = 0; tabu[3][5] = 4; tabu[3][6] = -3; tabu[3][7] = 6;
+    tabu[4][0] = 6; tabu[4][1] = -3; tabu[4][2] = 4; tabu[4][3] = 0; tabu[4][4] = 0; tabu[4][5] = 4; tabu[4][6] = -3; tabu[4][7] = 6;
+    tabu[5][0] = 8; tabu[5][1] = -4; tabu[5][2] = 7; tabu[5][3] = 4; tabu[5][4] = 4; tabu[5][5] = 7; tabu[5][6] = -4; tabu[5][7] = 8;
+    tabu[6][0] = -8; tabu[6][1] = -24; tabu[6][2] = -4; tabu[6][3] = -3; tabu[6][4] = -3; tabu[6][5] = -4; tabu[6][6] = -24; tabu[6][7] = -8;
+    tabu[7][0] = 99; tabu[7][1] = -8; tabu[7][2] = 8; tabu[7][3] = 6; tabu[7][4] = 6; tabu[7][5] = 8; tabu[7][6] = -8; tabu[7][7] = 99;
+
+    return tabu[i][j];
 }
 
 /**
@@ -92,7 +108,7 @@ void botN2(ESTADO e)
  * @param inicial peça do jogador inicial
  * @param opponent peça do jogador adversário
  * @param search profundidade da pesquisa de jogadas
- * @return
+ * @return posição da jogada do bot
  */
 int minmaxmanny (ESTADO e, VALOR inicial, VALOR opponent, int search)
 {
@@ -103,6 +119,7 @@ int minmaxmanny (ESTADO e, VALOR inicial, VALOR opponent, int search)
     if (inicial == VALOR_X) return(scoreX(e) - scoreO(e));
     else return(scoreO(e) - scoreX(e));
   }
+  else if(listAS(e)==0) return -1;
   else {
     for (i = 0; i < 8; i++)
       for (j = 0; j < 8; j++)
@@ -112,12 +129,12 @@ int minmaxmanny (ESTADO e, VALOR inicial, VALOR opponent, int search)
 
             val = minmaxmanny(tmp,inicial,opponent,search+1);
 
-            if (e.peca == inicial) {
-              if (val > bestMove) {
-                  bestMove = val;
-                  x = i;
-                  y = j;
-              }
+            val += tabuleiro(i,j);
+
+            if (e.peca == inicial && val > bestMove) {
+                bestMove = val;
+                x = i;
+                y = j;
             }
             else if (bestMove == -9999 || val < bestMove) {
                 bestMove = val;
@@ -136,10 +153,10 @@ int minmaxmanny (ESTADO e, VALOR inicial, VALOR opponent, int search)
  * @param com variável de decisão que determina se o bot está a jogar em campeonato ou contra utilizador
  * @return estado atualizado com a jogada do bot
  */
-ESTADO botN3(ESTADO e, int com)
+ESTADO botN3(ESTADO e)
 {
   int l = 0, c = 0, val;
-  //ESTADO tmp; int tabu[8][8];
+
   if (listAS(e) != 0) {
     if (e.peca == VALOR_O) val = minmaxmanny(e,e.peca,VALOR_X,0);
     else val = minmaxmanny(e,e.peca,VALOR_O,0);
@@ -148,16 +165,7 @@ ESTADO botN3(ESTADO e, int com)
     l = (val - c) / 10;
   }
 
- //tentar juntar os dois quando funcionar
- /* tabu[0][0] = 99; tabu[0][1] = -8; tabu[0][2] = 8; tabu[0][3] = 6; tabu[0][4] = 6; tabu[0][5] = 8; tabu[0][6] = -8; tabu[0][7] = 99;
-  tabu[1][0] = -8; tabu[1][1] = -24; tabu[1][2] = -4; tabu[1][3] = -3; tabu[1][4] = -3; tabu[1][5] = -4; tabu[1][6] = -24; tabu[1][7] = -8;
-  tabu[2][0] = 8; tabu[2][1] = -4; tabu[2][2] = 7; tabu[2][3] = 4; tabu[2][4] = 4; tabu[2][5] = 7; tabu[2][6] = -4; tabu[2][7] = 8;
-  tabu[3][0] = 6; tabu[3][1] = -3; tabu[3][2] = 4; tabu[3][3] = 0; tabu[3][4] = 0; tabu[3][5] = 4; tabu[3][6] = -3; tabu[3][7] = 6;
-  tabu[4][0] = 6; tabu[4][1] = -3; tabu[4][2] = 4; tabu[4][3] = 0; tabu[4][4] = 0; tabu[4][5] = 4; tabu[4][6] = -3; tabu[4][7] = 6;
-  tabu[5][0] = 8; tabu[5][1] = -4; tabu[5][2] = 7; tabu[5][3] = 4; tabu[5][4] = 4; tabu[5][5] = 7; tabu[5][6] = -4; tabu[5][7] = 8;
-  tabu[6][0] = -8; tabu[6][1] = -24; tabu[6][2] = -4; tabu[6][3] = -3; tabu[6][4] = -3; tabu[6][5] = -4; tabu[6][6] = -24; tabu[6][7] = -8;
-  tabu[7][0] = 99; tabu[7][1] = -8; tabu[7][2] = 8; tabu[7][3] = 6; tabu[7][4] = 6; tabu[7][5] = 8; tabu[7][6] = -8; tabu[7][7] = 99;
-
+ /*
   for (i = 0; i < 8; i++)
     for (j = 0; j < 8; j++)
       if(pecas(e,i,j) == POSSIBLE)
@@ -167,6 +175,6 @@ ESTADO botN3(ESTADO e, int com)
           c = j;
         }
 */
-  e = jogadabot(e,l,c,com);
+  e = jogadabot(e,l,c);
   return e;
 }

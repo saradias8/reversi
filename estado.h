@@ -18,6 +18,7 @@ typedef struct estado {
     VALOR grelha[8][8];
     char modo; // modo em que se está a jogar! 0-> manual, 1-> contra computador
     int nivel; // nivel do bot
+    int campeonato; // 1-> está em campeonato, 0-> não está em campeonato
 } ESTADO;
 
 ESTADO iniciaE(ESTADO);
